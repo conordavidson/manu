@@ -8,7 +8,7 @@ import Structure from './lib/structure';
 
 export default defineConfig({
   name: 'default',
-  title: 'manu',
+  title: 'Manu',
 
   projectId: 'xrxtnkrx',
   dataset: 'production',
