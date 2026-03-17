@@ -53,7 +53,7 @@ const Settings = Sanity.defineType({
     },
     {
       name: 'groupShows',
-      title: 'Group Show',
+      title: 'Group Shows',
       type: 'array',
       of: [
         {

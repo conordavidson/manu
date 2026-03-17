@@ -11,7 +11,7 @@ export default defineCliConfig({
      * Learn more at https://www.sanity.io/docs/studio/latest-version-of-sanity#k47faf43faf56
      */
     autoUpdates: true,
-    appId: 'tpxam9dkidvdgv0znzmxct79',
+    appId: 'xh4l6lpzz5garuo7wnumfu4z',
   },
   typegen: {
     path: '../www/lib/sanity/queries.ts',
