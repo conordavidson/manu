@@ -8,9 +8,9 @@ import Structure from './lib/structure';
 
 export default defineConfig({
   name: 'default',
-  title: 'Sanity in Practice',
+  title: 'manu',
 
-  projectId: 'xyk2gm36',
+  projectId: 'xrxtnkrx',
   dataset: 'production',
 
   plugins: [

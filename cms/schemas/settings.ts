@@ -11,6 +11,11 @@ const Settings = Sanity.defineType({
   description: 'Settings for the site',
   type: 'document',
   icon: Icons.Settings,
+  preview: {
+    prepare: () => ({
+      title: 'Settings',
+    }),
+  },
   fields: [
     {
       name: 'title',
@@ -25,16 +30,9 @@ const Settings = Sanity.defineType({
       type: 'text',
     },
     {
-      name: 'favicon',
-      title: 'Favicon',
+      name: 'coverImage',
+      title: 'Cover Image',
       type: 'image',
-    },
-    {
-      name: 'activeAnnouncement',
-      title: 'Active Announcement',
-      description: 'If a announcement is selected, it will be displayed on the site',
-      type: 'reference',
-      to: [{ type: 'announcement' }],
     },
   ],
 });

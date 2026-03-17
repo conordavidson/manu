@@ -5,7 +5,7 @@ import * as Queries from '@/lib/sanity/queries';
 import * as Types from '@/lib/types';
 
 export const client = SanityClient.createClient({
-  projectId: 'xyk2gm36',
+  projectId: 'xrxtnkrx',
   dataset: 'production',
   apiVersion: '2025-11-17',
   useCdn: false,

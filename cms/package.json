@@ -1,5 +1,5 @@
 {
-  "name": "sanity-in-practice",
+  "name": "manu",
   "private": true,
   "version": "1.0.0",
   "main": "package.json",
@@ -18,11 +18,11 @@
   ],
   "dependencies": {
     "@sanity/client": "^7.14.1",
-    "@sanity/vision": "^5.11.0",
+    "@sanity/vision": "^5.17.1",
     "lucide-react": "^0.564.0",
     "react": "^19.1",
     "react-dom": "^19.1",
-    "sanity": "^5.11.0",
+    "sanity": "^5.17.1",
     "sanity-plugin-media": "^4.1.1",
     "styled-components": "^6.1.18"
   },
