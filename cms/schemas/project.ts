@@ -9,7 +9,6 @@ const Project = Sanity.defineType({
   fields: [
     {
       name: 'title',
-      description: 'The title of the site',
       title: 'Title',
       type: 'string',
     },

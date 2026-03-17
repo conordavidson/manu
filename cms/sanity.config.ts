@@ -17,7 +17,7 @@ export default defineConfig({
     structureTool({
       structure: Structure,
     }),
-    visionTool(),
+    ...(process.env.NODE_ENV === 'development' ? [visionTool()] : []),
     media(),
   ],
 
