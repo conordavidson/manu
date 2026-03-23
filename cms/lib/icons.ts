@@ -1,11 +1,16 @@
 export {
+  Group as Collection,
   BadgeInfo as Info,
-  Component as GroupShow,
   GraduationCap as Education,
+  Sparkle as Feature,
+  Component as GroupShow,
+  House as Homepage,
   Film as Project,
   LayoutList as Richtext,
   LayoutList as TextImage,
   Newspaper as Press,
   Image as RichImage,
   Settings as Settings,
+  GalleryHorizontalEnd as Slide,
+  Columns2 as TwoUp,
 } from 'lucide-react';

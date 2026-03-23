@@ -22,7 +22,17 @@ const structure: SanityStructure.StructureResolver = (S) => {
 
       S.divider(),
 
+      S.listItem()
+        .title('Collections')
+        .icon(Icons.Collection)
+        .child(S.documentTypeList('collection')),
+
       S.listItem().title('Projects').icon(Icons.Project).child(S.documentTypeList('project')),
+
+      S.listItem()
+        .title('Homepage')
+        .icon(Icons.Homepage)
+        .child(S.document().schemaType('homepage').documentId('homepage')),
     ]);
 };
 

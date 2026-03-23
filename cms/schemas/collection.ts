@@ -1,11 +1,22 @@
 import * as Sanity from 'sanity';
 import * as Icons from '../lib/icons';
 
-const Project = Sanity.defineType({
-  name: 'project',
-  title: 'Project',
+const Collection = Sanity.defineType({
+  name: 'collection',
+  title: 'Collection',
   type: 'document',
-  icon: Icons.Project,
+  icon: Icons.Collection,
+  preview: {
+    select: {
+      title: 'title',
+      projects: 'projects',
+    },
+    prepare: ({ title, projects }) => ({
+      title,
+      subtitle: `${projects.length} projects`,
+      media: Icons.Collection,
+    }),
+  },
   fields: [
     {
       name: 'title',
@@ -23,40 +34,16 @@ const Project = Sanity.defineType({
       validation: (Rule) => Rule.required(),
     },
     {
-      name: 'year',
-      title: 'Year',
-      type: 'number',
-    },
-    {
-      name: 'location',
-      title: 'Location',
-      type: 'string',
-    },
-    {
-      name: 'client',
-      title: 'Client',
-      type: 'string',
-    },
-    {
-      name: 'images',
-      title: 'Images',
+      name: 'projects',
+      title: 'Projects',
       type: 'array',
-      of: [{ type: 'image' }],
-    },
-    {
-      name: 'projectType',
-      title: 'Project Type',
-      type: 'string',
-      options: {
-        list: ['personal', 'commissioned'],
-      },
-      initialValue: 'personal',
-      validation: (Rule) => Rule.required(),
-    },
-    {
-      name: 'description',
-      title: 'Description',
-      type: 'richTextSimple',
+      of: [
+        {
+          type: 'reference',
+          title: 'Project',
+          to: [{ type: 'project' }],
+        },
+      ],
     },
     {
       name: 'coverImage',
@@ -84,4 +71,4 @@ const Project = Sanity.defineType({
   ],
 });
 
-export default Project;
+export default Collection;

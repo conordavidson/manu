@@ -9,7 +9,9 @@ export type Collection = NonNullable<Sanity.GET_COLLECTION_BY_SLUG_QUERY_RESULT>
 
 export type Project = NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>;
 
-export type RichText = NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>['description'];
+export type RichText = NonNullable<
+  NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>['description']
+>;
 
 export type Info = NonNullable<Sanity.GET_INFO_QUERY_RESULT>;
 
