@@ -46,7 +46,7 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
   return (
     <div className="h-[calc(100dvh-var(--nav-height))] grid grid-rows-[auto_min-content]">
       <div
-        className="relative flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-5"
+        className="relative flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8"
         ref={scrollContainerRef}
       >
         {props.collection.projects?.map((project) => (

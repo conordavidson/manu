@@ -68,7 +68,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
           return <Slide key={slide._key}>{getContent()}</Slide>;
         })}
       </div>
-      <div className="sticky left-0 w-dvw pt-8">
+      <div className="sticky left-0 w-dvw pt-16">
         <Page.Container className="w-full flex justify-start">
           <Link className="group" href={Paths.Collections.detail(props.feature.collection)}>
             <Text.Body className="text-subdued group-hover:text-foreground transition-colors">
