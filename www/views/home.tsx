@@ -38,7 +38,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
 
             if (slide.images.length === 2) {
               return (
-                <div className="grid grid-cols-2 gap-x-2 h-full">
+                <div className="grid grid-cols-2 gap-x-4 h-full">
                   {slide.images.map((image, index) => (
                     <Image
                       className={Utils.cx('object-contain h-full w-full min-h-0', {

@@ -1,10 +1,13 @@
 import WorkIndexView from '@/views/work';
 
-import * as Next from 'next';
 import * as Sanity from '@/lib/sanity';
 
-export const metadata: Next.Metadata = {
-  title: 'Projects',
+export const generateMetadata = async () => {
+  const globals = await Sanity.Globals.get();
+
+  return {
+    title: `${globals.settings.title} · Index`,
+  };
 };
 
 export default async function Page() {
