@@ -6,7 +6,7 @@ import * as Utils from '../lib/utils';
 This will live as a singleton document in the CMS. It's used to define the
 site settings.
 */
-const Settings = Sanity.defineType({
+const Info = Sanity.defineType({
   name: 'info',
   title: 'Info',
   description: 'Info for the site',
@@ -23,6 +23,7 @@ const Settings = Sanity.defineType({
       title: 'Description',
       description: 'The description of the site. This will be displayed in the meta tags.',
       type: 'richTextSimple',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'education',
@@ -46,6 +47,7 @@ const Settings = Sanity.defineType({
               name: 'item',
               title: 'Education Item',
               type: 'richTextSimple',
+              validation: (Rule) => Rule.required(),
             },
           ],
         },
@@ -73,6 +75,7 @@ const Settings = Sanity.defineType({
               name: 'name',
               title: 'Group Show',
               type: 'richTextSimple',
+              validation: (Rule) => Rule.required(),
             },
           ],
         },
@@ -100,6 +103,7 @@ const Settings = Sanity.defineType({
               name: 'title',
               title: 'Title',
               type: 'richTextSimple',
+              validation: (Rule) => Rule.required(),
             },
             {
               name: 'href',
@@ -114,8 +118,9 @@ const Settings = Sanity.defineType({
       name: 'contact',
       title: 'Contact',
       type: 'richTextSimple',
+      validation: (Rule) => Rule.required(),
     },
   ],
 });
 
-export default Settings;
+export default Info;

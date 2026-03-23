@@ -65,7 +65,7 @@ export type RichTextSimple = Array<{
   style?: 'normal';
   listItem?: never;
   markDefs?: Array<{
-    href?: string;
+    href: string;
     _type: 'link';
     _key: string;
   }>;
@@ -200,24 +200,24 @@ export type Info = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  description?: RichTextSimple;
+  description: RichTextSimple;
   education?: Array<{
-    item?: RichTextSimple;
+    item: RichTextSimple;
     _type: 'education';
     _key: string;
   }>;
   groupShows?: Array<{
-    name?: RichTextSimple;
+    name: RichTextSimple;
     _type: 'groupShow';
     _key: string;
   }>;
   pressItems?: Array<{
-    title?: RichTextSimple;
+    title: RichTextSimple;
     href?: string;
     _type: 'press';
     _key: string;
   }>;
-  contact?: RichTextSimple;
+  contact: RichTextSimple;
 };
 
 export type MediaTag = {
@@ -404,7 +404,7 @@ export type INDEX_PROJECTS_QUERY_RESULT = Array<{
     style?: 'normal';
     listItem?: never;
     markDefs: Array<{
-      href?: string;
+      href: string;
       _type: 'link';
       _key: string;
     }> | null;
@@ -500,7 +500,7 @@ export type GET_PROJECT_BY_SLUG_QUERY_RESULT = {
     style?: 'normal';
     listItem?: never;
     markDefs: Array<{
-      href?: string;
+      href: string;
       _type: 'link';
       _key: string;
     }> | null;
@@ -571,24 +571,24 @@ export type GET_INFO_QUERY_RESULT = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  description?: RichTextSimple;
+  description: RichTextSimple;
   education?: Array<{
-    item?: RichTextSimple;
+    item: RichTextSimple;
     _type: 'education';
     _key: string;
   }>;
   groupShows?: Array<{
-    name?: RichTextSimple;
+    name: RichTextSimple;
     _type: 'groupShow';
     _key: string;
   }>;
   pressItems?: Array<{
-    title?: RichTextSimple;
+    title: RichTextSimple;
     href?: string;
     _type: 'press';
     _key: string;
   }>;
-  contact?: RichTextSimple;
+  contact: RichTextSimple;
   coverImage: null;
 } | null;
 
@@ -654,7 +654,7 @@ export type GET_COLLECTION_BY_SLUG_QUERY_RESULT = {
       style?: 'normal';
       listItem?: never;
       markDefs: Array<{
-        href?: string;
+        href: string;
         _type: 'link';
         _key: string;
       }> | null;
@@ -791,7 +791,7 @@ export type INDEX_COLLECTIONS_QUERY_RESULT = Array<{
       style?: 'normal';
       listItem?: never;
       markDefs: Array<{
-        href?: string;
+        href: string;
         _type: 'link';
         _key: string;
       }> | null;
@@ -935,7 +935,7 @@ export type GET_HOMEPAGE_QUERY_RESULT = {
           style?: 'normal';
           listItem?: never;
           markDefs: Array<{
-            href?: string;
+            href: string;
             _type: 'link';
             _key: string;
           }> | null;

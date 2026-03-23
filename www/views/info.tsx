@@ -1,6 +1,6 @@
+import Link from 'next/link';
 import RichText from '@/ui/rich-text';
 
-import * as Link from 'next/link';
 import * as Page from '@/ui/page';
 import * as React from 'react';
 import * as Text from '@/ui/text';

@@ -1,19 +1,17 @@
 'use client';
 
-import Link from 'next/link';
-
 import * as Pt from '@portabletext/react';
 import * as Text from '@/ui/text';
 import * as Types from '@/lib/types';
 
 type RichTextProps = {
-  value: Types.RichText;
+  value: Types.RichText | Types.RichTextSimple;
 };
 
 const RichText: React.FC<RichTextProps> = (props) => {
   return (
     <div className="rich-text">
-      <Pt.PortableText components={Components} value={props.value} />
+      <Pt.PortableText components={Components} value={props.value as Pt.PortableTextBlock[]} />
     </div>
   );
 };

@@ -13,6 +13,8 @@ export type RichText = NonNullable<
   NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>['description']
 >;
 
+export type RichTextSimple = NonNullable<Sanity.GET_INFO_QUERY_RESULT>['description'];
+
 export type Info = NonNullable<Sanity.GET_INFO_QUERY_RESULT>;
 
 export type Settings = NonNullable<Sanity.GET_SETTINGS_QUERY_RESULT>;

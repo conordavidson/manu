@@ -58,7 +58,7 @@ export const Simple = Sanity.defineType({
                 title: 'Href',
                 type: 'url',
                 validation: (Rule) =>
-                  Rule.uri({
+                  Rule.required().uri({
                     scheme: ['http', 'https', 'mailto', 'tel'],
                   }),
               },

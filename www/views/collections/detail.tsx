@@ -88,7 +88,7 @@ const Project: React.FC<ProjectProps> = (props) => {
           <Slide title="Statement">
             <div className="grid grid-rows-[min-content_auto] md:grid-cols-[300px_2fr] md:grid-rows-1 gap-x-12 gap-y-4 h-full">
               <div className="min-h-0 order-1 md:order-2 whitespace-normal overflow-y-auto">
-                <RichText value={props.project.description} />
+                <RichText value={props.project.description as Types.RichText} />
               </div>
               <div className="min-h-0 order-1 md:order-2">
                 <div className="grid grid-cols-6 gap-1">
