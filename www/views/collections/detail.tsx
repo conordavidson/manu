@@ -76,7 +76,7 @@ const Project: React.FC<ProjectProps> = (props) => {
           return (
             <Slide key={image._key} title={`${index + 1} / ${props.project.images?.length}`}>
               <Image
-                className="object-contain h-full w-full"
+                className="object-contain h-full w-full min-h-0"
                 image={image}
                 loading="eager"
                 sizes="100vw"
@@ -86,11 +86,8 @@ const Project: React.FC<ProjectProps> = (props) => {
         })}
         {!RichTextUtils.isEmpty(props.project.description) && (
           <Slide title="Statement">
-            <div className="grid grid-rows-[min-content_auto] md:grid-cols-[300px_2fr] md:grid-rows-1 gap-x-12 gap-y-4 h-full">
-              <div className="min-h-0 order-1 md:order-2 whitespace-normal overflow-y-auto">
-                <RichText value={props.project.description as Types.RichText} />
-              </div>
-              <div className="min-h-0 order-1 md:order-2">
+            <div className="flex flex-col md:grid md:grid-cols-[300px_2fr] gap-x-12 gap-y-4 h-full">
+              <div className="min-h-0 md:col-start-2 md:col-end-3 md:row-start-1">
                 <div className="grid grid-cols-6 gap-1">
                   {props.project.images.map((image) => {
                     return (
@@ -104,6 +101,9 @@ const Project: React.FC<ProjectProps> = (props) => {
                     );
                   })}
                 </div>
+              </div>
+              <div className="min-h-0 whitespace-normal overflow-y-auto md:col-start-1 md:col-end-2 md:row-start-1">
+                <RichText value={props.project.description as Types.RichText} />
               </div>
             </div>
           </Slide>
