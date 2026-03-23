@@ -12,8 +12,8 @@ type InfoViewProps = {
 
 const InfoView: React.FC<InfoViewProps> = (props) => {
   return (
-    <Page.Container className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr] gap-8 mb-foot">
-      <div>
+    <Page.Container className="relative grid grid-cols-4 gap-8 mb-foot">
+      <div className="col-span-full md:col-span-2">
         <div className="flex items-start gap-x-8 flex-wrap">
           <div>
             <Link
@@ -40,7 +40,7 @@ const InfoView: React.FC<InfoViewProps> = (props) => {
           <RichText value={props.info.description} />
         </div>
       </div>
-      <div className="space-y-8">
+      <div className="space-y-8 col-span-full md:col-span-2 lg:col-span-1">
         <div>
           <Text.Body bold>Education</Text.Body>
           <div className="mt-4 space-y-4">
@@ -62,7 +62,7 @@ const InfoView: React.FC<InfoViewProps> = (props) => {
           </div>
         </div>
       </div>
-      <div className="space-y-8">
+      <div className="space-y-8 col-span-full md:col-span-2 lg:col-span-1">
         <div>
           <Text.Body bold>Press</Text.Body>
           <ul className="mt-4">

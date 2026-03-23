@@ -25,8 +25,8 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
 
   return (
     <div>
-      <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_3fr] lg:grid-cols-2 gap-8">
-        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--nav-height)-var(--nav-height))]">
+      <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_2fr_3fr_3fr] lg:grid-cols-4 gap-8">
+        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--nav-height)-var(--nav-height))] col-span-2">
           {filteredProjects.map((project) => (
             <div
               className={Utils.cx(
@@ -47,7 +47,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
             </div>
           ))}
         </div>
-        <div>
+        <div className="col-span-2">
           <div className="divide-y divide-subdued grid grid-cols-[3fr_2fr_2fr_max-content] w-full gap-x-4">
             {filteredProjects.map((project) => (
               <Link
