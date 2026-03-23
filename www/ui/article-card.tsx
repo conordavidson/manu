@@ -1,9 +1,9 @@
-import * as Types from '@/lib/types';
-import * as Text from '@/ui/text';
-import * as Utils from '@/lib/utils';
-
 import Image from '@/ui/image';
 import Link from 'next/link';
+
+import * as Text from '@/ui/text';
+import * as Types from '@/lib/types';
+import * as Utils from '@/lib/utils';
 
 type ArticleCardProps = {
   article: Types.Article;
@@ -22,7 +22,7 @@ const ArticleCard: React.FC<ArticleCardProps> = (props) => {
     >
       {props.article.coverImage && (
         <div className="col-span-12 @xs:col-span-3 relative aspect-square rounded-md overflow-hidden">
-          <Image image={props.article.coverImage} className="h-full w-full object-cover" />
+          <Image className="h-full w-full object-cover" image={props.article.coverImage} />
         </div>
       )}
       <div className="col-span-9 flex flex-col justify-between gap-y-2">

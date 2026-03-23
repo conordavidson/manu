@@ -1,9 +1,9 @@
-import * as Types from '@/lib/types';
-import * as Text from '@/ui/text';
-import * as Utils from '@/lib/utils';
-
 import Image from '@/ui/image';
 import Link from 'next/link';
+
+import * as Text from '@/ui/text';
+import * as Types from '@/lib/types';
+import * as Utils from '@/lib/utils';
 
 type EventCardProps = {
   event: Types.Event;
@@ -17,7 +17,7 @@ const EventCard: React.FC<EventCardProps> = (props) => {
     >
       {props.event.coverImage && (
         <div className="col-span-12 @xs:col-span-3 relative aspect-square rounded-md overflow-hidden">
-          <Image image={props.event.coverImage} className="h-full w-full object-cover" />
+          <Image className="h-full w-full object-cover" image={props.event.coverImage} />
         </div>
       )}
       <div className="col-span-9 flex flex-col justify-between gap-y-2">

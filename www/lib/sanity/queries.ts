@@ -7,149 +7,95 @@ const IMAGE_QUERY = `
   }
 `;
 
-const LINK_QUERY = `
-  ...,
-  reference -> {
-    _type,
-    slug {
-      current
-    }
-  }
-`;
-
 const RICHTEXT_QUERY = `
   ...,
-  _type == "richImage" => {
-    ${IMAGE_QUERY}
-  },
   markDefs[] {
     ...,
-    _type == "link" => {
-      ${LINK_QUERY}
-    }
   }
-`;
-
-/*
-Notice how we use pt::text(excerpt) to get the plain text of the excerpt. This
-is used to display the excerpt in search results, meta descriptions, and
-sharecards where rich text isn't supported.
-*/
-const ARTICLE_QUERY = `
-  ...,
-  "excerptPlainText": pt::text(excerpt),
-  author -> {
-    ...
-  },
-  coverImage {
-    ${IMAGE_QUERY}
-  },
-  content[] {
-    ${RICHTEXT_QUERY}
-  },
-`;
-
-const SECTIONS_QUERY = `
-  ...,
-  _type == "centeredImage" => {
-    image {
-      ${IMAGE_QUERY}
-    },
-    cta {
-      ${LINK_QUERY}
-    }
-  },
-  _type == "fullWidthImage" => {
-    image {
-      ${IMAGE_QUERY}
-    },
-    cta {
-      ${LINK_QUERY}
-    }
-  },
-  _type == "splitPane" => {
-    firstPane {
-      ...,
-      image {
-        ${IMAGE_QUERY}
-      }
-    },
-    secondPane {
-      ...,
-      image {
-        ${IMAGE_QUERY}
-      }
-    }
-  },
-  _type == "textImage" => {
-    image {
-      ${IMAGE_QUERY}
-    },
-    content[] {
-      ${RICHTEXT_QUERY}
-    },
-    cta {
-      ${LINK_QUERY}
-    }
-  },
-`;
-
-const PAGE_QUERY = `
-  ...,
-  sections[] {
-    ${SECTIONS_QUERY}
-  },
-`;
-
-const ANNOUNCEMENT_QUERY = `
-  ...,
-  content[] {
-    ${RICHTEXT_QUERY}
-  },
 `;
 
 const SETTINGS_QUERY = `
-  ...,
-  activeAnnouncement -> {
-    ${ANNOUNCEMENT_QUERY}
-  },
+  ...
 `;
 
-const EVENT_QUERY = `
+const INFO_QUERY = `
   ...,
   coverImage {
     ${IMAGE_QUERY}
   }
 `;
 
-export const INDEX_PAGES_QUERY = defineQuery(
-  `*[_type == "page"] | order(publishedAt desc) { ${PAGE_QUERY} }`,
+const PROJECT_QUERY = `
+  ...,
+  images[] {
+    ${IMAGE_QUERY}
+  },
+  coverImage {
+    ${IMAGE_QUERY}
+  },
+  description[] {
+    ${RICHTEXT_QUERY}
+  }
+`;
+
+const COLLECTION_QUERY = `
+  ...,
+  projects[] -> {
+    ${PROJECT_QUERY}
+  },
+  coverImage {
+    ${IMAGE_QUERY}
+  }
+`;
+
+const SLIDE_QUERY = `
+  ...,
+  images[] {
+    ${IMAGE_QUERY}
+  }
+`;
+
+const FEATURE_QUERY = `
+  ...,
+  slides[] {
+    ${SLIDE_QUERY}
+  },
+  collection -> {
+    ${COLLECTION_QUERY}
+  }
+`;
+
+const HOMEPAGE_QUERY = `
+  ...,
+  features[] {
+    ${FEATURE_QUERY}
+  }
+`;
+
+export const INDEX_PROJECTS_QUERY = defineQuery(
+  `*[_type == "project"] | order(year desc) { ${PROJECT_QUERY} }`,
 );
 
-export const GET_PAGE_BY_SLUG_QUERY = defineQuery(
-  `*[_type == "page" && slug.current == $slug][0] { ${PAGE_QUERY} }`,
-);
-
-export const INDEX_ARTICLES_QUERY = defineQuery(
-  `*[_type == "article"] | order(publishedAt desc) { ${ARTICLE_QUERY} }`,
-);
-
-export const GET_ARTICLE_BY_SLUG_QUERY = defineQuery(
-  `*[_type == "article" && slug.current == $slug][0] { ${ARTICLE_QUERY} }`,
+export const GET_PROJECT_BY_SLUG_QUERY = defineQuery(
+  `*[_type == "project" && slug.current == $slug][0] { ${PROJECT_QUERY} }`,
 );
 
 export const GET_SETTINGS_QUERY = defineQuery(
   `*[_type == "settings" && _id == "settings"][0] { ${SETTINGS_QUERY} }`,
 );
 
-export const INDEX_EVENTS_QUERY = defineQuery(
-  `*[_type == "event"] | order(startsAt desc) { ${EVENT_QUERY} }`,
+export const GET_INFO_QUERY = defineQuery(
+  `*[_type == "info" && _id == "info"][0] { ${INFO_QUERY} }`,
 );
 
-export const INDEX_UPCOMING_EVENTS_QUERY = defineQuery(
-  `*[_type == "event" && dateTime(startsAt) > dateTime(now())] | order(startsAt asc) { ${EVENT_QUERY} }`,
+export const GET_COLLECTION_BY_SLUG_QUERY = defineQuery(
+  `*[_type == "collection" && slug.current == $slug][0] { ${COLLECTION_QUERY} }`,
 );
 
-export const GET_EVENT_BY_SLUG_QUERY = defineQuery(
-  `*[_type == "event" && slug.current == $slug][0] { ${EVENT_QUERY} }`,
+export const INDEX_COLLECTIONS_QUERY = defineQuery(
+  `*[_type == "collection"] | order(title asc) { ${COLLECTION_QUERY} }`,
+);
+
+export const GET_HOMEPAGE_QUERY = defineQuery(
+  `*[_type == "homepage" && _id == "homepage"][0] { ${HOMEPAGE_QUERY} }`,
 );

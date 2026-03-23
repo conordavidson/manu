@@ -1,19 +1,19 @@
+import NextImage from 'next/image';
+
 import * as Sanity from '@/lib/sanity';
 import * as Types from '@/lib/types';
 
-import NextImage from 'next/image';
-
 type ImageBaseProps = Omit<
   React.ComponentProps<typeof NextImage>,
-  'src' | 'alt' | 'width' | 'height'
+  'alt' | 'height' | 'src' | 'width'
 >;
 
 type ImageProps = {
   image: {
     _type: 'image' | 'richImage';
-    asset?: Types.Sanity.SanityImageAsset | null;
-    hotspot?: Types.Sanity.SanityImageHotspot;
+    asset?: null | Types.Sanity.SanityImageAsset;
     crop?: Types.Sanity.SanityImageCrop;
+    hotspot?: Types.Sanity.SanityImageHotspot;
   };
 } & ImageBaseProps;
 
@@ -25,10 +25,12 @@ export const Image: React.FC<ImageProps> = (props) => {
   return (
     <NextImage
       {...props}
-      src={url.toString()}
       alt={props.image.asset.altText ?? 'Image'}
-      width={props.image.asset.metadata!.dimensions!.width}
       height={props.image.asset.metadata!.dimensions!.height}
+      // placeholder="blur"
+      // blurDataURL={props.image.asset.metadata!.lqip}
+      src={url.toString()}
+      width={props.image.asset.metadata!.dimensions!.width}
     />
   );
 };

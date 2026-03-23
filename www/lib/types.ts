@@ -2,23 +2,21 @@ import * as Sanity from '@/lib/sanity/types';
 export * as Sanity from '@/lib/sanity/types';
 
 export type Globals = {
-  settings: NonNullable<Sanity.GET_SETTINGS_QUERY_RESULT>;
+  settings: Settings;
 };
 
-export type Sections = NonNullable<Sanity.GET_PAGE_BY_SLUG_QUERY_RESULT>['sections'];
+export type Collection = NonNullable<Sanity.GET_COLLECTION_BY_SLUG_QUERY_RESULT>;
 
-export type FullWidthImageSection = Extract<Sections[number], { _type: 'fullWidthImage' }>;
+export type Project = NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>;
 
-export type CenteredImageSection = Extract<Sections[number], { _type: 'centeredImage' }>;
+export type RichText = NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>['description'];
 
-export type SplitPaneSection = Extract<Sections[number], { _type: 'splitPane' }>;
+export type Info = NonNullable<Sanity.GET_INFO_QUERY_RESULT>;
 
-export type TextImageSection = Extract<Sections[number], { _type: 'textImage' }>;
+export type Settings = NonNullable<Sanity.GET_SETTINGS_QUERY_RESULT>;
 
-export type UpcomingEventsSection = Extract<Sections[number], { _type: 'upcomingEvents' }>;
+export type Homepage = NonNullable<Sanity.GET_HOMEPAGE_QUERY_RESULT>;
 
-export type Article = NonNullable<Sanity.GET_ARTICLE_BY_SLUG_QUERY_RESULT>;
+export type HomepageFeature = Homepage['features'][number];
 
-export type Event = NonNullable<Sanity.GET_EVENT_BY_SLUG_QUERY_RESULT>;
-
-export type RichText = NonNullable<Sanity.GET_ARTICLE_BY_SLUG_QUERY_RESULT>['content'];
+export type HomepageSlide = HomepageFeature['slides'][number];

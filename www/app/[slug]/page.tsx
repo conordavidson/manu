@@ -1,34 +1,38 @@
-import * as Sanity from '@/lib/sanity';
-import * as Navigation from 'next/navigation';
+import CollectionsDetailView from '@/views/collections/detail';
 
-import PageView from '@/views/page';
+import * as Navigation from 'next/navigation';
+import * as Projects from '@/lib/projects';
+import * as Sanity from '@/lib/sanity';
 
 export const generateMetadata = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
-  const page = await Sanity.Pages.getBySlug(slug);
-  if (!page) return Navigation.notFound();
+  const collection = await Sanity.Collections.getBySlug(slug);
+  if (!collection) return Navigation.notFound();
 
   return {
-    title: page.title,
-    description: page.metadata.description,
-    keywords: page.metadata.keywords,
-    image: page.metadata.coverImage ? Sanity.urlForImage(page.metadata.coverImage) : null,
+    title: collection.title,
+    description: collection.metadata?.description,
+    keywords: collection.metadata?.keywords,
+    image: collection.coverImage ? Sanity.urlForImage(collection.coverImage) : null,
   };
 };
 
 export const generateStaticParams = async () => {
-  const pages = await Sanity.Pages.index();
-  return pages.map((page) => {
+  const projects = await Sanity.Projects.index();
+  return projects.map((project) => {
     return {
-      slug: page.slug.current,
+      slug: project.slug.current,
     };
   });
 };
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const page = await Sanity.Pages.getBySlug(slug);
-  if (!page) return Navigation.notFound();
 
-  return <PageView page={page} />;
+  const collection = await Sanity.Collections.getBySlug(slug);
+  const globals = await Sanity.Globals.get();
+
+  if (!collection) return Navigation.notFound();
+
+  return <CollectionsDetailView collection={collection} globals={globals} />;
 }

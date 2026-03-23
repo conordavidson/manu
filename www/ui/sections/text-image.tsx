@@ -1,10 +1,10 @@
-import * as Button from '@/ui/button';
-import * as Page from '@/ui/page';
-import * as Types from '@/lib/types';
-import * as Text from '@/ui/text';
-
 import Image from '@/ui/image';
 import RichText from '@/ui/rich-text';
+
+import * as Button from '@/ui/button';
+import * as Page from '@/ui/page';
+import * as Text from '@/ui/text';
+import * as Types from '@/lib/types';
 
 type TextImageProps = {
   section: Types.TextImageSection;
@@ -12,7 +12,7 @@ type TextImageProps = {
 
 const TextImage: React.FC<TextImageProps> = (props) => {
   return (
-    <section id={props.section._key} className="@container text-image">
+    <section className="@container text-image" id={props.section._key}>
       <Page.Container className="grid grid-cols-12 gap-x-6 gap-y-4">
         <div className="col-span-12 order-2 sm:order-1 sm:col-span-6 flex items-center">
           <div>
@@ -36,7 +36,7 @@ const TextImage: React.FC<TextImageProps> = (props) => {
         </div>
         <div className="col-span-12 order-1 sm:order-2 sm:col-span-6">
           <div className="relative aspect-4/3">
-            <Image image={props.section.image} className="h-full w-full object-cover" />
+            <Image className="h-full w-full object-cover" image={props.section.image} />
           </div>
         </div>
       </Page.Container>

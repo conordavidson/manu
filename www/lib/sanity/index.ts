@@ -1,7 +1,6 @@
+import * as Queries from '@/lib/sanity/queries';
 import * as SanityClient from '@sanity/client';
 import * as SanityImage from '@sanity/image-url';
-
-import * as Queries from '@/lib/sanity/queries';
 import * as Types from '@/lib/types';
 
 export const client = SanityClient.createClient({
@@ -33,18 +32,28 @@ export const Globals = {
   },
 };
 
-export const Articles = {
-  index: () => client.fetch(Queries.INDEX_ARTICLES_QUERY),
-  getBySlug: (slug: string) => client.fetch(Queries.GET_ARTICLE_BY_SLUG_QUERY, { slug }),
+export const Collections = {
+  index: () => client.fetch(Queries.INDEX_COLLECTIONS_QUERY),
+  getBySlug: (slug: string) => client.fetch(Queries.GET_COLLECTION_BY_SLUG_QUERY, { slug }),
 };
 
-export const Pages = {
-  index: () => client.fetch(Queries.INDEX_PAGES_QUERY),
-  getBySlug: (slug: string) => client.fetch(Queries.GET_PAGE_BY_SLUG_QUERY, { slug }),
+export const Projects = {
+  index: () => client.fetch(Queries.INDEX_PROJECTS_QUERY),
+  getBySlug: (slug: string) => client.fetch(Queries.GET_PROJECT_BY_SLUG_QUERY, { slug }),
 };
 
-export const Events = {
-  index: () => client.fetch(Queries.INDEX_EVENTS_QUERY),
-  upcoming: () => client.fetch(Queries.INDEX_UPCOMING_EVENTS_QUERY),
-  getBySlug: (slug: string) => client.fetch(Queries.GET_EVENT_BY_SLUG_QUERY, { slug }),
+export const Info = {
+  get: async (): Promise<Types.Info> => {
+    const info = await client.fetch(Queries.GET_INFO_QUERY);
+    if (!info) throw new Error('No info found');
+    return info;
+  },
+};
+
+export const Homepage = {
+  get: async (): Promise<Types.Homepage> => {
+    const homepage = await client.fetch(Queries.GET_HOMEPAGE_QUERY);
+    if (!homepage) throw new Error('No homepage found');
+    return homepage;
+  },
 };

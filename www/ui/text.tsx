@@ -2,17 +2,17 @@ import * as React from 'react';
 import * as Utils from '@/lib/utils';
 
 type TextProps = {
+  [x: string]: unknown;
+  as?: string;
   bold?: boolean;
   className?: string;
-  as?: string;
-  [x: string]: unknown;
 };
 
 type TextComponent = React.FC<React.PropsWithChildren<TextProps>>;
 
 const baseClasses = 'text-current';
 
-const Base: React.FC<React.PropsWithChildren<TextProps & { defaultClasses: string }>> = ({
+const Base: React.FC<React.PropsWithChildren<{ defaultClasses: string } & TextProps>> = ({
   as = 'p',
   children,
   className,

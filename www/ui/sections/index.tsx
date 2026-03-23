@@ -1,10 +1,10 @@
-import * as Types from '@/lib/types';
-
 import CenteredImage from './centered-image';
 import FullWidthImage from './full-width-image';
 import SplitPane from './split-pane';
 import TextImage from './text-image';
 import UpcomingEvents from './upcoming-events';
+
+import * as Types from '@/lib/types';
 
 type SectionsProps = {
   sections: NonNullable<Types.Sanity.GET_PAGE_BY_SLUG_QUERY_RESULT>['sections'];

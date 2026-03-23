@@ -1,93 +1,21 @@
 @import 'tailwindcss';
 
 :root {
-  --tint: hsl(31, 21%, 67%);
-  --tint-strength: 40%;
-  --semantic-tint-strength: 15%;
-
-  --accent: hsl(226, 98%, 39%);
-  --primary: hsl(19, 85%, 40%);
-  --error: hsl(0, 85%, 55%);
-  --warning: hsl(45, 100%, 45%);
-  --success: hsl(120, 50%, 40%);
-
-  --light: white;
-  --dark: black;
-
-  --color-background: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 3%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-surface: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 7%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-line: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 14%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-faint: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 25%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-diminished: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 40%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-muted: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 55%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-subdued: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 70%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-foreground: color-mix(
-    in oklch,
-    color-mix(in oklch, var(--light), var(--dark) 93.5%),
-    var(--tint) var(--tint-strength)
-  );
-
-  --color-accent: color-mix(in oklch, var(--accent), var(--tint) var(--semantic-tint-strength));
-  --color-primary: color-mix(in oklch, var(--primary), var(--tint) var(--semantic-tint-strength));
-  --color-error: color-mix(in oklch, var(--error), var(--tint) var(--semantic-tint-strength));
-  --color-warning: color-mix(in oklch, var(--warning), var(--tint) var(--semantic-tint-strength));
-  --color-success: color-mix(in oklch, var(--success), var(--tint) var(--semantic-tint-strength));
+  --color-background: #ffffff;
+  --color-foreground: #000;
+  --color-muted: #666;
+  --color-subdued: #999;
+  --color-faint: #ccc;
+  --color-diminished: #eee;
 
   --site-container: 1216px;
-  --site-container-narrow: 960px;
-  --site-container-editorial: 768px;
   --nav-height: 3rem;
   --gutter: 1.25rem;
   --head: 2rem;
   --foot: 12rem;
 
-  --button-height-small: 32px;
-  --button-height-default: 40px;
-  --button-height-large: 48px;
-
+  --button-height: 40px;
   --input-height: 40px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --light: black;
-    --dark: white;
-  }
 }
 
 @media (min-width: theme(screens.lg)) {
@@ -98,34 +26,21 @@
 
 @theme inline {
   --color-background: var(--color-background);
-  --color-surface: var(--color-surface);
-  --color-line: var(--color-line);
-  --color-faint: var(--color-faint);
-  --color-diminished: var(--color-diminished);
+  --color-foreground: var(--color-foreground);
   --color-muted: var(--color-muted);
   --color-subdued: var(--color-subdued);
-  --color-foreground: var(--color-foreground);
+  --color-faint: var(--color-faint);
+  --color-diminished: var(--color-diminished);
 
-  --color-accent: var(--color-accent);
-  --color-primary: var(--color-primary);
-  --color-error: var(--color-error);
-  --color-warning: var(--color-warning);
-  --color-success: var(--color-success);
-
+  --spacing-site-container: var(--site-container);
   --spacing-nav-height: var(--nav-height);
   --spacing-gutter: var(--gutter);
-  --spacing-site-container: var(--site-container);
-  --spacing-site-container-narrow: var(--site-container-narrow);
-  --spacing-site-container-editorial: var(--site-container-editorial);
 
   --spacing-head: var(--head);
   --spacing-foot: var(--foot);
 
   --spacing-input-height: var(--input-height);
-
-  --spacing-button-height-small: var(--button-height-small);
-  --spacing-button-height-default: var(--button-height-default);
-  --spacing-button-height-large: var(--button-height-large);
+  --spacing-button-height: var(--button-height);
 }
 
 body {
@@ -199,7 +114,7 @@ Type Scale
 .type-body,
 .type-body-bold {
   font-size: 0.875rem;
-  line-height: 1.375rem;
+  line-height: 1.25rem;
 }
 .type-body {
   font-weight: 400;
@@ -227,6 +142,14 @@ Rich Text
 */
 
 .rich-text {
+  *:first-child {
+    margin-top: 0;
+  }
+
+  *:last-child {
+    margin-bottom: 0;
+  }
+
   h2 {
     margin-top: 4rem;
     margin-bottom: 2rem;
@@ -265,13 +188,10 @@ Rich Text
   }
 
   a {
-    color: var(--color-primary);
-    text-decoration: underline;
-    text-decoration-style: dotted;
-    transition: opacity var(--transition-duration) ease-in-out;
-
+    color: var(--color-subdued);
+    transition: color 150ms ease-in-out;
     &:hover {
-      opacity: 0.7;
+      color: var(--color-foreground);
     }
   }
 

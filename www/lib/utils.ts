@@ -6,7 +6,7 @@ const addClass = (base: string, newClass: string) => {
   return `${base} ${newClass}`;
 };
 
-type Class = string | Record<string, boolean> | null | undefined;
+type Class = null | Record<string, boolean> | string | undefined;
 
 /*
 Merges classnames together.
@@ -40,7 +40,7 @@ export const formatDate = (date: string) => {
   });
 };
 
-export const formatDateRange = (startDate: string, endDate?: string | null) => {
+export const formatDateRange = (startDate: string, endDate?: null | string) => {
   if (!endDate) return formatDateShort(startDate);
   return `${formatDateShort(startDate)} - ${formatDateShort(endDate)}`;
 };

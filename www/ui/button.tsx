@@ -1,26 +1,26 @@
+import Link from '@/ui/link';
+
 import * as Text from '@/ui/text';
 import * as Utils from '@/lib/utils';
 
-import Link from '@/ui/link';
-
 export type BaseProps = React.PropsWithChildren<
   {
-    disabled?: boolean;
-    label?: string | React.ReactNode;
     className?: string;
+    disabled?: boolean;
     inline?: boolean;
-    size?: 'small' | 'default' | 'large';
-  } & (SubmitButtonProps | ButtonProps | React.ComponentProps<typeof Link>)
+    label?: React.ReactNode | string;
+    size?: 'default' | 'large' | 'small';
+  } & (ButtonProps | React.ComponentProps<typeof Link> | SubmitButtonProps)
 >;
 
 type ButtonProps = {
-  type?: 'button';
   onClick: () => void;
+  type?: 'button';
 };
 
 type SubmitButtonProps = {
-  type: 'submit';
   onClick?: () => void;
+  type: 'submit';
 };
 
 const Base: React.FC<BaseProps> = (props) => {
@@ -41,7 +41,7 @@ const Base: React.FC<BaseProps> = (props) => {
 
     if (typeof props.label === 'string') {
       return (
-        <Text.Body key="label" bold>
+        <Text.Body bold key="label">
           {props.label}
         </Text.Body>
       );
@@ -70,7 +70,7 @@ const Base: React.FC<BaseProps> = (props) => {
 
   if ('link' in props) {
     return (
-      <Link link={props.link} className={className}>
+      <Link className={className} link={props.link}>
         {content()}
       </Link>
     );
@@ -78,7 +78,7 @@ const Base: React.FC<BaseProps> = (props) => {
 
   if ('href' in props) {
     return (
-      <Link href={props.href} target={props.target} className={className}>
+      <Link className={className} href={props.href} target={props.target}>
         {content()}
       </Link>
     );

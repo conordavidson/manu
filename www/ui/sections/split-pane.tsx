@@ -1,9 +1,9 @@
-import * as Page from '@/ui/page';
-import * as Types from '@/lib/types';
-import * as Text from '@/ui/text';
-import * as Utils from '@/lib/utils';
-
 import Image from '@/ui/image';
+
+import * as Page from '@/ui/page';
+import * as Text from '@/ui/text';
+import * as Types from '@/lib/types';
+import * as Utils from '@/lib/utils';
 
 type SplitPaneProps = {
   section: Types.SplitPaneSection;
@@ -11,7 +11,7 @@ type SplitPaneProps = {
 
 const SplitPane: React.FC<SplitPaneProps> = (props) => {
   return (
-    <section id={props.section._key} className="split-pane border-y border-line">
+    <section className="split-pane border-y border-line" id={props.section._key}>
       <Page.Container className="grid grid-cols-2">
         <Pane {...props.section.firstPane} index={0} />
         <Pane {...props.section.secondPane} index={1} />
@@ -36,7 +36,7 @@ const Pane: React.FC<PaneProps> = (props) => {
       })}
     >
       <div className="relative aspect-4/3">
-        <Image image={props.image} className="h-full w-full object-cover" />
+        <Image className="h-full w-full object-cover" image={props.image} />
       </div>
       <div className="mt-8">
         {props.eyebrow && <Text.Detail className="mb-2 text-muted">{props.eyebrow}</Text.Detail>}
