@@ -26,7 +26,7 @@ const Navigation: React.FC<NavigationProps> = (props) => {
           </Text.Body>
         </Link>
         <div className="flex items-center gap-x-4">
-          <NavLink href={Paths.Projects.index} pathname={pathname}>
+          <NavLink href={Paths.work} pathname={pathname}>
             Index
           </NavLink>
           <NavLink href={Paths.info} pathname={pathname}>

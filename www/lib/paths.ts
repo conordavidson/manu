@@ -2,9 +2,9 @@ import * as Types from '@/lib/types';
 
 export const home = '/';
 export const info = '/info';
+export const work = '/work';
 
 export const Projects = {
-  index: '/index',
   detail: (project: Types.Project) => `/${project.slug.current}`,
 };
 
