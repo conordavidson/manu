@@ -11,8 +11,9 @@ export const generateMetadata = async () => {
 };
 
 export default async function Page() {
+  const collections = await Sanity.Collections.index();
   const globals = await Sanity.Globals.get();
   const projects = await Sanity.Projects.index();
 
-  return <WorkIndexView globals={globals} projects={projects} />;
+  return <WorkIndexView collections={collections} globals={globals} projects={projects} />;
 }
