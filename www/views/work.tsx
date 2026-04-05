@@ -48,7 +48,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
 
   return (
     <div>
-      <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_2fr_3fr_3fr] lg:grid-cols-4 gap-8">
+      <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_2fr_3fr_3fr] lg:grid-cols-4 gap-gutter">
         <div className="hidden md:block relative w-full h-[calc(100dvh-var(--nav-height)-var(--nav-height))] col-span-2 sticky top-[var(--nav-height)]">
           {filteredProjects.map((project) => (
             <div
@@ -105,7 +105,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
               return (
                 <React.Fragment key={collection._id}>
                   <Link
-                    className="text-subdued hover:text-foreground transition-colors col-span-full grid grid-cols-subgrid mt-12"
+                    className="text-subdued hover:text-foreground transition-colors col-span-full grid grid-cols-subgrid not-first:mt-12"
                     href={Paths.Collections.detail(collection)}
                     onMouseEnter={() => setActiveSelection({ type: 'collection', collection })}
                     onMouseLeave={() => setActiveSelection(null)}
