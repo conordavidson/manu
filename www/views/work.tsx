@@ -28,10 +28,7 @@ type Selection =
     };
 
 const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
-  const [activeSelection, setActiveSelection] = React.useState<null | Selection>({
-    type: 'collection',
-    collection: props.collections[0],
-  });
+  const [activeSelection, setActiveSelection] = React.useState<null | Selection>(null);
 
   const isProjectSelected = (project: Types.Project) => {
     if (!activeSelection) return false;
