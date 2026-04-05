@@ -5,6 +5,7 @@ import RichText from '@/ui/rich-text';
 
 import * as Page from '@/ui/page';
 import * as React from 'react';
+import * as Scroll from '@/lib/scroll';
 import * as RichTextUtils from '@/lib/rich-text';
 import * as Text from '@/ui/text';
 import * as Types from '@/lib/types';
@@ -45,31 +46,31 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const slideRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const [isScrolling, setIsScrolling] = React.useState(false);
+  const isScrollingRef = React.useRef(false);
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 
   const scrollToSlide = React.useCallback((index: number) => {
-    setIsScrolling(true);
-    setTimeout(() => {
-      setIsScrolling(false);
-    }, 1000);
+    const container = scrollRef.current;
     const el = slideRefs.current[index];
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-    }
+    if (!container || !el) return;
+    isScrollingRef.current = true;
+    setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 400);
+    Scroll.smoothScrollTo(container, el);
   }, []);
 
   const onNext = React.useCallback(() => {
-    if (isScrolling) return;
+    if (isScrollingRef.current) return;
     const next = Math.min(currentSlideIndex + 1, totalSlides - 1);
     scrollToSlide(next);
-  }, [totalSlides, scrollToSlide, isScrolling, currentSlideIndex]);
+  }, [totalSlides, scrollToSlide, currentSlideIndex]);
 
   const onPrevious = React.useCallback(() => {
-    if (isScrolling) return;
+    if (isScrollingRef.current) return;
     const prev = Math.max(currentSlideIndex - 1, 0);
     scrollToSlide(prev);
-  }, [scrollToSlide, isScrolling, currentSlideIndex]);
+  }, [scrollToSlide, currentSlideIndex]);
 
   // Sync currentSlide on manual scroll via IntersectionObserver
   React.useEffect(() => {
