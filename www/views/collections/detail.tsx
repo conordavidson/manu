@@ -15,40 +15,9 @@ type CollectionsDetailViewProps = {
 };
 
 const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
-  const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-
-  // React.useEffect(() => {
-  //   const scrollContainer = scrollContainerRef.current;
-  //   if (!scrollContainer) return;
-
-  //   const onScroll = () => {
-  //     const scrollLeft = scrollContainer.scrollLeft;
-  //     const clientWidth = scrollContainer.clientWidth;
-  //     const newActiveImageIndex = Math.round(scrollLeft / clientWidth) + 1;
-  //     setActiveImageIndex(newActiveImageIndex);
-  //   };
-
-  //   scrollContainer.addEventListener('scroll', onScroll);
-  //   return () => scrollContainer.removeEventListener('scroll', onScroll);
-  // }, [scrollContainerRef]);
-
-  // const onNext = () => {
-  //   if (!scrollContainerRef.current) return;
-
-  //   if (activeImageIndex < totalImages) {
-  //     scrollContainerRef.current.scrollTo({
-  //       left: activeImageIndex * scrollContainerRef.current.clientWidth,
-  //       behavior: 'smooth',
-  //     });
-  //   }
-  // };
-
   return (
     <div className="h-[calc(100dvh-var(--nav-height))] grid grid-rows-[auto_min-content]">
-      <div
-        className="relative flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8"
-        ref={scrollContainerRef}
-      >
+      <div className="relative flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8">
         {props.collection.projects?.map((project) => (
           <Project key={project._id} project={project} />
         ))}
@@ -70,7 +39,7 @@ const Project: React.FC<ProjectProps> = (props) => {
   if (!props.project.images) return null;
 
   return (
-    <div className="relative h-full flex flex-col">
+    <div id={props.project.slug.current} className="relative h-full flex flex-col">
       <div className="flex flex-1 min-h-0 shrink-0">
         {props.project.images.map((image, index) => {
           return (

@@ -115,7 +115,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                   {collectionProjects.map((project) => (
                     <Link
                       className="text-subdued hover:text-foreground transition-colors duration-400 hover:duration-75 col-span-full grid grid-cols-subgrid"
-                      href={Paths.Projects.detail(project)}
+                      href={`${Paths.Collections.detail(collection)}#${project.slug.current}`}
                       onMouseEnter={() => setActiveSelection({ type: 'project', project })}
                       onMouseLeave={() => setActiveSelection(null)}
                       key={project._id}
