@@ -1,4 +1,7 @@
 import * as Sanity from '@/lib/sanity/types';
+
+export type Image = NonNullable<Sanity.Project['images']>[number];
+
 export * as Sanity from '@/lib/sanity/types';
 
 export type Globals = {

@@ -28,7 +28,7 @@ type Selection =
     };
 
 const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
-  const [activeSelection, setActiveSelection] = React.useState<null | Selection>(null);
+  const [activeSelection, setActiveSelection] = React.useState<null | Selection>();
 
   const isProjectSelected = (project: Types.Project) => {
     if (!activeSelection) return false;
@@ -80,14 +80,19 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
               )}
               key={collection._id}
             >
-              <div className="h-full w-full grid grid-cols-4 place-content-center place-items-center gap-4">
+              <div
+                className="h-full w-full grid grid-cols-8 place-content-center place-items-center gap-2 auto-rows-[minmax(0,min-content)]
+"
+              >
                 {collection.projects
-                  ?.filter((project) => project.images && project.images.length > 0)
-                  .map((project) => (
+                  ?.flatMap((project) => project.images)
+                  .filter((image) => image !== null)
+                  .map((image) => (
                     <Image
-                      className="object-contain"
-                      image={Projects.getCoverImage(project)}
-                      key={project._id}
+                      className="object-contain h-full w-full"
+                      image={image}
+                      key={image._key}
+                      sizes="12.5vw"
                     />
                   ))}
               </div>

@@ -1,7 +1,7 @@
-const DURATION = 375;
+const DURATION = 350;
 
 function easeInOut(t: number): number {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 16;
+  return 1 - Math.pow(1 - t, 3);
 }
 
 export function smoothScrollTo(container: HTMLElement, target: HTMLElement): void {
