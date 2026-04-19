@@ -65,6 +65,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                 <Image
                   className="object-contain h-full w-full"
                   image={Projects.getCoverImage(project)}
+                  sizes="500px"
                 />
               </div>
             </div>
@@ -91,7 +92,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                       className="object-contain h-full w-full"
                       image={Projects.getCoverImage(project)}
                       key={project._id}
-                      sizes="12.5vw"
+                      sizes="140px"
                     />
                   ))}
               </div>
@@ -116,7 +117,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                     key={project._id}
                     className="object-contain h-full w-full "
                     image={Projects.getCoverImage(project)}
-                    sizes="12.5vw"
+                    sizes="140px"
                   />
                 );
               })}
