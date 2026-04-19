@@ -35,8 +35,8 @@ const InfoView: React.FC<InfoViewProps> = (props) => {
             <Text.Body>BRA +55 (11) 99605-0071</Text.Body>
           </Link>
         </div>
-        <div className="mt-4 max-w-[500px]">
-          <Image image={props.info.bioImage} />
+        <div className="mt-4 max-w-lg">
+          <Image image={props.info.bioImage} sizes="500px" />
         </div>
       </div>
       <div className="col-span-full md:col-span-3 lg:col-span-2">
