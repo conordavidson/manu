@@ -201,6 +201,13 @@ export type Info = {
   _updatedAt: string;
   _rev: string;
   description: RichTextSimple;
+  bioImage: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
   education?: Array<{
     item: RichTextSimple;
     _type: 'education';
@@ -564,7 +571,7 @@ export type GET_SETTINGS_QUERY_RESULT = {
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: GET_INFO_QUERY
-// Query: *[_type == "info" && _id == "info"][0] {   ...,  coverImage {      ...,  asset -> {    ...  }  } }
+// Query: *[_type == "info" && _id == "info"][0] {   ...,  bioImage {      ...,  asset -> {    ...  }  } }
 export type GET_INFO_QUERY_RESULT = {
   _id: 'info';
   _type: 'info';
@@ -572,6 +579,34 @@ export type GET_INFO_QUERY_RESULT = {
   _updatedAt: string;
   _rev: string;
   description: RichTextSimple;
+  bioImage: {
+    asset: {
+      _id: string;
+      _type: 'sanity.imageAsset';
+      _createdAt: string;
+      _updatedAt: string;
+      _rev: string;
+      originalFilename?: string;
+      label?: string;
+      title?: string;
+      description?: string;
+      altText?: string;
+      sha1hash: string;
+      extension: string;
+      mimeType: string;
+      size: number;
+      assetId: string;
+      uploadId?: string;
+      path: string;
+      url: string;
+      metadata?: SanityImageMetadata;
+      source?: SanityAssetSourceData;
+    } | null;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+  };
   education?: Array<{
     item: RichTextSimple;
     _type: 'education';
@@ -589,7 +624,6 @@ export type GET_INFO_QUERY_RESULT = {
     _key: string;
   }>;
   contact: RichTextSimple;
-  coverImage: null;
 } | null;
 
 // Source: ../www/lib/sanity/queries.ts
@@ -1054,7 +1088,7 @@ declare module '@sanity/client' {
     '*[_type == "project"] | order(year desc) { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': INDEX_PROJECTS_QUERY_RESULT;
     '*[_type == "project" && slug.current == $slug][0] { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': GET_PROJECT_BY_SLUG_QUERY_RESULT;
     '*[_type == "settings" && _id == "settings"][0] { \n  ...\n }': GET_SETTINGS_QUERY_RESULT;
-    '*[_type == "info" && _id == "info"][0] { \n  ...,\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_INFO_QUERY_RESULT;
+    '*[_type == "info" && _id == "info"][0] { \n  ...,\n  bioImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_INFO_QUERY_RESULT;
     '*[_type == "collection" && slug.current == $slug][0] { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_COLLECTION_BY_SLUG_QUERY_RESULT;
     '*[_type == "collection"] | order(title asc) { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': INDEX_COLLECTIONS_QUERY_RESULT;
     '*[_type == "homepage" && _id == "homepage"][0] { \n  ...,\n  features[] {\n    \n  ...,\n  slides[] {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  },\n  collection -> {\n    \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  }\n\n  }\n }': GET_HOMEPAGE_QUERY_RESULT;

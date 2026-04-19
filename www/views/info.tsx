@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import RichText from '@/ui/rich-text';
+import Image from '@/ui/image';
 
 import * as Page from '@/ui/page';
 import * as React from 'react';
@@ -12,31 +13,34 @@ type InfoViewProps = {
 
 const InfoView: React.FC<InfoViewProps> = (props) => {
   return (
-    <Page.Container className="relative grid grid-cols-4 gap-8 mb-foot">
-      <div className="col-span-full md:col-span-2">
-        <div className="flex items-start gap-x-8 flex-wrap">
-          <div>
-            <Link
-              className="text-subdued hover:text-foreground transition-colors"
-              href="mailto:manupbsl@gmail.com"
-            >
-              <Text.Body>manupbsl@gmail.com</Text.Body>
-            </Link>
-            <Link
-              className="text-subdued hover:text-foreground transition-colors"
-              href="tel:+19176911275"
-            >
-              <Text.Body>USA +1 (917) 691-1275</Text.Body>
-            </Link>
-            <Link
-              className="text-subdued hover:text-foreground transition-colors"
-              href="tel:+5511996050071"
-            >
-              <Text.Body>BRA +55 (11) 99605-0071</Text.Body>
-            </Link>
-          </div>
+    <Page.Container className="relative grid grid-cols-5 gap-8 mb-foot">
+      <div className="col-span-full md:col-span-2 lg:col-span-1">
+        <div>
+          <Link
+            className="text-subdued hover:text-foreground transition-colors"
+            href="mailto:manupbsl@gmail.com"
+          >
+            <Text.Body>manupbsl@gmail.com</Text.Body>
+          </Link>
+          <Link
+            className="text-subdued hover:text-foreground transition-colors"
+            href="tel:+19176911275"
+          >
+            <Text.Body>USA +1 (917) 691-1275</Text.Body>
+          </Link>
+          <Link
+            className="text-subdued hover:text-foreground transition-colors"
+            href="tel:+5511996050071"
+          >
+            <Text.Body>BRA +55 (11) 99605-0071</Text.Body>
+          </Link>
         </div>
-        <div className="mt-4 max-w-lg">
+        <div className="mt-4 max-w-[500px]">
+          <Image image={props.info.bioImage} />
+        </div>
+      </div>
+      <div className="col-span-full md:col-span-3 lg:col-span-2">
+        <div className="max-w-lg">
           <RichText value={props.info.description} />
         </div>
       </div>

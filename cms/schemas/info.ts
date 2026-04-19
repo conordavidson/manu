@@ -21,8 +21,14 @@ const Info = Sanity.defineType({
     {
       name: 'description',
       title: 'Description',
-      description: 'The description of the site. This will be displayed in the meta tags.',
+      description: 'The description of the site.',
       type: 'richTextSimple',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'bioImage',
+      title: 'Bio Image',
+      type: 'image',
       validation: (Rule) => Rule.required(),
     },
     {

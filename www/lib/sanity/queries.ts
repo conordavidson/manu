@@ -20,7 +20,7 @@ const SETTINGS_QUERY = `
 
 const INFO_QUERY = `
   ...,
-  coverImage {
+  bioImage {
     ${IMAGE_QUERY}
   }
 `;

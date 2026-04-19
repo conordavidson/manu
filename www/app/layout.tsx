@@ -19,6 +19,9 @@ const RootLayout: React.FC<React.PropsWithChildren> = async (props) => {
 
   return (
     <html lang="en">
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/fri7lzm.css" />
+      </head>
       <body>
         <Navigation globals={globals} projects={projects} />
         <main>{props.children}</main>

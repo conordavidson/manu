@@ -47,7 +47,7 @@ body {
   background: var(--color-background);
   color: var(--color-foreground);
   font-family:
-    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'acumin-pro', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
   font-smooth: always;
   -webkit-font-smoothing: antialiased;

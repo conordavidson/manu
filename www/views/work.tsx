@@ -28,7 +28,7 @@ type Selection =
     };
 
 const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
-  const [activeSelection, setActiveSelection] = React.useState<null | Selection>();
+  const [activeSelection, setActiveSelection] = React.useState<null | Selection>(null);
 
   const isProjectSelected = (project: Types.Project) => {
     if (!activeSelection) return false;
@@ -49,11 +49,11 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
   return (
     <div>
       <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_2fr_3fr_3fr] lg:grid-cols-4 gap-gutter">
-        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--nav-height)-var(--nav-height))] col-span-2 sticky top-[var(--nav-height)]">
+        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--spacing-nav-height)-var(--spacing-nav-height))] col-span-2 sticky top-[var(--spacing-nav-height)]">
           {filteredProjects.map((project) => (
             <div
               className={Utils.cx(
-                'absolute inset-0 flex items-center justify-center transition-opacity duration-150',
+                'absolute inset-0 flex items-center justify-center transition-opacity duration-150 pr-gutter',
                 {
                   'opacity-100': isProjectSelected(project),
                   'opacity-0': !isProjectSelected(project),
@@ -81,23 +81,47 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
               key={collection._id}
             >
               <div
-                className="h-full w-full grid grid-cols-8 place-content-center place-items-center gap-2 auto-rows-[minmax(0,min-content)]
+                className="h-full w-full grid grid-cols-4 place-content-center place-items-center gap-2 auto-rows-[minmax(0,min-content)]
 "
               >
                 {collection.projects
-                  ?.flatMap((project) => project.images)
-                  .filter((image) => image !== null)
-                  .map((image) => (
+                  ?.filter((project) => project.images && project.images.length > 0)
+                  .map((project) => (
                     <Image
                       className="object-contain h-full w-full"
-                      image={image}
-                      key={image._key}
+                      image={Projects.getCoverImage(project)}
+                      key={project._id}
                       sizes="12.5vw"
                     />
                   ))}
               </div>
             </div>
           ))}
+          <div
+            className={Utils.cx(
+              'absolute inset-0 flex items-center justify-center transition-opacity duration-150',
+              {
+                'opacity-100': activeSelection === null,
+                'opacity-0': activeSelection !== null,
+              },
+            )}
+          >
+            <div
+              className="h-full w-full grid grid-cols-4 xl:grid-cols-6 place-content-center place-items-center gap-2 auto-rows-[minmax(0,min-content)]
+"
+            >
+              {filteredProjects.map((project) => {
+                return (
+                  <Image
+                    key={project._id}
+                    className="object-contain h-full w-full "
+                    image={Projects.getCoverImage(project)}
+                    sizes="12.5vw"
+                  />
+                );
+              })}
+            </div>
+          </div>
         </div>
         <div className="col-span-2 mb-12">
           <div className="divide-y divide-subdued grid grid-cols-[3fr_2fr_2fr_max-content] w-full gap-x-4">
