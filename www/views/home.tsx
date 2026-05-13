@@ -2,6 +2,7 @@
 
 import Image from '@/ui/image';
 import Link from 'next/link';
+import Posthog from 'posthog-js';
 
 import * as Page from '@/ui/page';
 import * as Paths from '@/lib/paths';
@@ -17,8 +18,8 @@ type HomeViewProps = {
 
 type FeatureWithSlideInfo = {
   feature: Types.HomepageFeature;
-  startIndex: number;
   slideCount: number;
+  startIndex: number;
 };
 
 function getFeatureSlideInfo(features: Types.HomepageFeature[]): FeatureWithSlideInfo[] {
@@ -58,12 +59,14 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
     if (isScrollingRef.current) return;
     const next = Math.min(currentSlideIndex + 1, totalSlides - 1);
     scrollToSlide(next);
+    Posthog.capture('home_slide_navigated', { direction: 'next', slide_index: next });
   }, [totalSlides, scrollToSlide, currentSlideIndex]);
 
   const onPrevious = React.useCallback(() => {
     if (isScrollingRef.current) return;
     const prev = Math.max(currentSlideIndex - 1, 0);
     scrollToSlide(prev);
+    Posthog.capture('home_slide_navigated', { direction: 'previous', slide_index: prev });
   }, [scrollToSlide, currentSlideIndex]);
 
   React.useEffect(() => {
@@ -94,17 +97,17 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
   return (
     <div className="h-[calc(100dvh-var(--nav-height))]">
       <div
-        ref={scrollRef}
         className="relative h-full flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8"
+        ref={scrollRef}
       >
         {features.map((item) => (
           <Feature
-            key={item.feature._key}
             feature={item.feature}
-            slideRefs={slideRefs}
-            startIndex={item.startIndex}
+            key={item.feature._key}
             onNext={onNext}
             onPrevious={onPrevious}
+            slideRefs={slideRefs}
+            startIndex={item.startIndex}
           />
         ))}
       </div>
@@ -114,10 +117,10 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
 
 type FeatureProps = {
   feature: Types.HomepageFeature;
-  slideRefs: React.RefObject<(HTMLDivElement | null)[]>;
-  startIndex: number;
   onNext: () => void;
   onPrevious: () => void;
+  slideRefs: React.RefObject<(HTMLDivElement | null)[]>;
+  startIndex: number;
 };
 
 const Feature: React.FC<FeatureProps> = (props) => {
@@ -161,11 +164,11 @@ const Feature: React.FC<FeatureProps> = (props) => {
           return (
             <Slide
               key={slide._key}
+              onNext={props.onNext}
+              onPrevious={props.onPrevious}
               ref={(el) => {
                 props.slideRefs.current[slideIdx] = el;
               }}
-              onNext={props.onNext}
-              onPrevious={props.onPrevious}
             >
               {getContent()}
             </Slide>
@@ -174,7 +177,15 @@ const Feature: React.FC<FeatureProps> = (props) => {
       </div>
       <div className="sticky left-0 w-dvw pt-16">
         <Page.Container className="w-full flex justify-start">
-          <Link className="group" href={Paths.Collections.detail(props.feature.collection)}>
+          <Link
+            className="group"
+            href={Paths.Collections.detail(props.feature.collection)}
+            onClick={() =>
+              Posthog.capture('home_collection_link_clicked', {
+                collection_title: props.feature.collection.title,
+              })
+            }
+          >
             <Text.Body className="text-subdued group-hover:text-foreground transition-colors">
               {props.feature.collection.title} ↗
             </Text.Body>
@@ -192,7 +203,7 @@ type SlideProps = React.PropsWithChildren<{
 
 const Slide = React.forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
   return (
-    <div ref={ref} className="relative w-dvw shrink-0 snap-center">
+    <div className="relative w-dvw shrink-0 snap-center" ref={ref}>
       <div className="absolute inset-0 z-10 flex pointer-events-none">
         <div
           className="w-1/2 h-full cursor-w-resize pointer-events-auto"

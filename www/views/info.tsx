@@ -1,6 +1,9 @@
-import Link from 'next/link';
-import RichText from '@/ui/rich-text';
+'use client';
+
 import Image from '@/ui/image';
+import Link from 'next/link';
+import Posthog from 'posthog-js';
+import RichText from '@/ui/rich-text';
 
 import * as Page from '@/ui/page';
 import * as React from 'react';
@@ -19,18 +22,25 @@ const InfoView: React.FC<InfoViewProps> = (props) => {
           <Link
             className="text-subdued hover:text-foreground transition-colors"
             href="mailto:manupbsl@gmail.com"
+            onClick={() => Posthog.capture('info_email_clicked', { email: 'manupbsl@gmail.com' })}
           >
             <Text.Body>manupbsl@gmail.com</Text.Body>
           </Link>
           <Link
             className="text-subdued hover:text-foreground transition-colors"
             href="tel:+19176911275"
+            onClick={() =>
+              Posthog.capture('info_phone_clicked', { country: 'USA', phone: '+19176911275' })
+            }
           >
             <Text.Body>USA +1 (917) 691-1275</Text.Body>
           </Link>
           <Link
             className="text-subdued hover:text-foreground transition-colors"
             href="tel:+5511996050071"
+            onClick={() =>
+              Posthog.capture('info_phone_clicked', { country: 'BRA', phone: '+5511996050071' })
+            }
           >
             <Text.Body>BRA +55 (11) 99605-0071</Text.Body>
           </Link>
@@ -83,7 +93,13 @@ const InfoView: React.FC<InfoViewProps> = (props) => {
                   className="text-subdued hover:text-foreground transition-colors"
                   key={pressItem._key}
                 >
-                  <Link href={pressItem.href} target="_blank">
+                  <Link
+                    href={pressItem.href}
+                    onClick={() =>
+                      Posthog.capture('info_press_link_clicked', { url: pressItem.href })
+                    }
+                    target="_blank"
+                  >
                     <RichText value={pressItem.title} />
                   </Link>
                 </li>

@@ -2,6 +2,7 @@
 
 import Image from '@/ui/image';
 import Link from 'next/link';
+import Posthog from 'posthog-js';
 
 import * as Page from '@/ui/page';
 import * as Paths from '@/lib/paths';
@@ -12,19 +13,19 @@ import * as Types from '@/lib/types';
 import * as Utils from '@/lib/utils';
 
 type WorkDetailViewProps = {
+  collections: Types.Collection[];
   globals: Types.Globals;
   projects: Types.Project[];
-  collections: Types.Collection[];
 };
 
 type Selection =
   | {
-      type: 'project';
-      project: Types.Project;
+      collection: Types.Collection;
+      type: 'collection';
     }
   | {
-      type: 'collection';
-      collection: Types.Collection;
+      project: Types.Project;
+      type: 'project';
     };
 
 const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
@@ -114,9 +115,9 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
               {filteredProjects.map((project) => {
                 return (
                   <Image
-                    key={project._id}
                     className="object-contain h-full w-full "
                     image={Projects.getCoverImage(project)}
+                    key={project._id}
                     sizes="140px"
                   />
                 );
@@ -137,6 +138,11 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                   <Link
                     className="text-subdued hover:text-foreground transition-colors col-span-full grid grid-cols-subgrid not-first:mt-12"
                     href={Paths.Collections.detail(collection)}
+                    onClick={() =>
+                      Posthog.capture('work_collection_clicked', {
+                        collection_title: collection.title,
+                      })
+                    }
                     onMouseEnter={() => setActiveSelection({ type: 'collection', collection })}
                     onMouseLeave={() => setActiveSelection(null)}
                   >
@@ -146,9 +152,16 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                     <Link
                       className="text-subdued hover:text-foreground transition-colors duration-400 hover:duration-75 col-span-full grid grid-cols-subgrid"
                       href={`${Paths.Collections.detail(collection)}#${project.slug.current}`}
+                      key={project._id}
+                      onClick={() =>
+                        Posthog.capture('work_project_clicked', {
+                          project_title: project.title,
+                          collection_title: collection.title,
+                          project_year: project.year,
+                        })
+                      }
                       onMouseEnter={() => setActiveSelection({ type: 'project', project })}
                       onMouseLeave={() => setActiveSelection(null)}
-                      key={project._id}
                     >
                       <Text.Body>{project.title}</Text.Body>
                       <Text.Body>{project.location}</Text.Body>
