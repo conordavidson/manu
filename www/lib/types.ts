@@ -1,6 +1,12 @@
 import * as Sanity from '@/lib/sanity/types';
 
-export type Image = NonNullable<Sanity.Project['images']>[number];
+export type ProjectMedia = NonNullable<
+  NonNullable<Sanity.GET_PROJECT_BY_SLUG_QUERY_RESULT>['images']
+>[number];
+
+export type Image = Extract<ProjectMedia, { _type: 'image' }>;
+
+export type ProjectSlide = Extract<ProjectMedia, { _type: 'Slide' }>;
 
 export * as Sanity from '@/lib/sanity/types';
 

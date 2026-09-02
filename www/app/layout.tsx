@@ -24,7 +24,7 @@ const RootLayout: React.FC<React.PropsWithChildren> = async (props) => {
       </head>
       <body>
         <Navigation globals={globals} projects={projects} />
-        <main>{props.children}</main>
+        <main className="pt-4">{props.children}</main>
       </body>
     </html>
   );

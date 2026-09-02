@@ -20,12 +20,12 @@ const Navigation: React.FC<NavigationProps> = (props) => {
   return (
     <nav className="h-nav-height">
       <Page.Container className="h-full w-full flex justify-between items-center">
-        <Link href={Paths.home}>
-          <Text.Body className={Utils.cx('text-foreground hover:text-muted transition-colors')}>
+        <Link className="group -mx-2 inline-flex min-h-11 items-center px-2" href={Paths.home}>
+          <Text.Body className={Utils.cx('text-foreground group-hover:text-muted transition-colors')}>
             {props.globals.settings.title}
           </Text.Body>
         </Link>
-        <div className="flex items-center gap-x-4">
+        <div className="-mr-2 flex items-center">
           <NavLink href={Paths.work} pathname={pathname}>
             Index
           </NavLink>
@@ -46,11 +46,14 @@ type NavLinkProps = {
 
 const NavLink: React.FC<NavLinkProps> = (props) => {
   return (
-    <Link href={props.href}>
+    <Link
+      className="group inline-flex min-h-11 items-center px-2"
+      href={props.href}
+    >
       <Text.Body
         className={Utils.cx({
           'text-foreground': props.pathname === props.href,
-          'text-subdued hover:text-muted transition-colors': props.pathname !== props.href,
+          'text-subdued group-hover:text-muted transition-colors': props.pathname !== props.href,
         })}
       >
         {props.children}

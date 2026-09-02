@@ -1,50 +1,62 @@
-const DURATION = 350;
+type ActiveScroll = {
+  cancel: () => void;
+};
 
-function easeOut(t: number): number {
-  return 1 - Math.pow(1 - t, 3);
+const activeScrolls = new WeakMap<HTMLElement, ActiveScroll>();
+
+export function cancelSmoothScroll(container: HTMLElement): void {
+  activeScrolls.get(container)?.cancel();
 }
 
-let currentRaf: number | null = null;
-
 export function smoothScrollTo(container: HTMLElement, target: HTMLElement): void {
-  // Cancel any in-flight animation so they don't fight over scrollLeft
-  if (currentRaf !== null) {
-    cancelAnimationFrame(currentRaf);
-    currentRaf = null;
-  }
-
-  // Disable scroll-snap BEFORE reading positions, so scrollLeft reflects reality
-  const prevSnap = container.style.scrollSnapType;
-  container.style.scrollSnapType = 'none';
+  activeScrolls.get(container)?.cancel();
 
   const containerRect = container.getBoundingClientRect();
   const targetRect = target.getBoundingClientRect();
-  const targetCenter = targetRect.left + targetRect.width / 2 - containerRect.left;
-  const containerCenter = containerRect.width / 2;
+  const targetCenter =
+    container.scrollLeft + targetRect.left - containerRect.left + targetRect.width / 2;
+  const maxScrollLeft = container.scrollWidth - container.clientWidth;
+  const destination = Math.max(
+    0,
+    Math.min(targetCenter - container.clientWidth / 2, maxScrollLeft),
+  );
 
-  const start = container.scrollLeft;
-  const destination = start + targetCenter - containerCenter;
-  const distance = destination - start;
+  if (Math.abs(destination - container.scrollLeft) < 1) return;
 
-  if (distance === 0) {
-    container.style.scrollSnapType = prevSnap;
-    return;
-  }
+  const previousSnapType = container.style.scrollSnapType;
+  let restoreFrame: null | number = null;
+  let isFinished = false;
 
-  const startTime = performance.now();
+  const removeListeners = () => {
+    container.removeEventListener('scrollend', finish);
+    if (restoreFrame) cancelAnimationFrame(restoreFrame);
+  };
 
-  function step(now: number) {
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / DURATION, 1);
-    container.scrollLeft = start + distance * easeOut(progress);
+  const restoreSnap = () => {
+    container.style.scrollSnapType = previousSnapType;
+    activeScrolls.delete(container);
+  };
 
-    if (progress < 1) {
-      currentRaf = requestAnimationFrame(step);
-    } else {
-      currentRaf = null;
-      container.style.scrollSnapType = prevSnap;
-    }
-  }
+  const finish = () => {
+    if (isFinished) return;
+    isFinished = true;
+    removeListeners();
+    container.scrollLeft = destination;
+    restoreFrame = requestAnimationFrame(restoreSnap);
+  };
 
-  currentRaf = requestAnimationFrame(step);
+  const cancel = () => {
+    isFinished = true;
+    removeListeners();
+    container.scrollTo({ behavior: 'auto', left: container.scrollLeft });
+    restoreSnap();
+  };
+
+  activeScrolls.set(container, { cancel });
+  container.style.scrollSnapType = 'none';
+  container.addEventListener('scrollend', finish);
+  container.scrollTo({
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    left: destination,
+  });
 }

@@ -4,6 +4,7 @@ import Image from '@/ui/image';
 import Link from 'next/link';
 import Posthog from 'posthog-js';
 
+import * as Carousel from '@/lib/carousel';
 import * as Page from '@/ui/page';
 import * as Paths from '@/lib/paths';
 import * as React from 'react';
@@ -41,33 +42,40 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const slideRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const isScrollingRef = React.useRef(false);
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 
   const scrollToSlide = React.useCallback((index: number) => {
     const container = scrollRef.current;
     const el = slideRefs.current[index];
     if (!container || !el) return;
-    isScrollingRef.current = true;
-    setTimeout(() => {
-      isScrollingRef.current = false;
-    }, 400);
     Scroll.smoothScrollTo(container, el);
   }, []);
 
+  const onAutoAdvance = React.useCallback((index: number) => {
+    Posthog.capture('home_slide_navigated', { direction: 'auto', slide_index: index });
+  }, []);
+
+  const pauseAutoAdvance = Carousel.useCarouselBehavior({
+    containerRef: scrollRef,
+    currentSlideIndex,
+    onAutoAdvance,
+    scrollToSlide,
+    slideCount: totalSlides,
+  });
+
   const onNext = React.useCallback(() => {
-    if (isScrollingRef.current) return;
+    pauseAutoAdvance();
     const next = Math.min(currentSlideIndex + 1, totalSlides - 1);
     scrollToSlide(next);
     Posthog.capture('home_slide_navigated', { direction: 'next', slide_index: next });
-  }, [totalSlides, scrollToSlide, currentSlideIndex]);
+  }, [totalSlides, scrollToSlide, currentSlideIndex, pauseAutoAdvance]);
 
   const onPrevious = React.useCallback(() => {
-    if (isScrollingRef.current) return;
+    pauseAutoAdvance();
     const prev = Math.max(currentSlideIndex - 1, 0);
     scrollToSlide(prev);
     Posthog.capture('home_slide_navigated', { direction: 'previous', slide_index: prev });
-  }, [scrollToSlide, currentSlideIndex]);
+  }, [scrollToSlide, currentSlideIndex, pauseAutoAdvance]);
 
   React.useEffect(() => {
     const container = scrollRef.current;
@@ -95,7 +103,7 @@ const HomeView: React.FC<HomeViewProps> = (props) => {
   }, [features]);
 
   return (
-    <div className="h-[calc(100dvh-var(--nav-height))]">
+    <div className="h-[calc(100dvh-var(--nav-height)-1rem)]">
       <div
         className="relative h-full flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8"
         ref={scrollRef}
@@ -134,7 +142,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
 
             if (slide.images.length === 2) {
               return (
-                <div className="grid grid-cols-2 gap-x-4 h-full">
+                <div className="grid grid-cols-2 gap-x-4 h-full max-h-[1000px] my-auto">
                   {slide.images.map((image, index) => (
                     <Image
                       className={Utils.cx('object-contain h-full w-full min-h-0', {
@@ -153,7 +161,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
 
             return (
               <Image
-                className="object-contain h-full w-full"
+                className="object-contain h-full max-h-[1000px] w-full my-auto"
                 image={slide.images[0]}
                 loading="eager"
                 sizes="100vw"

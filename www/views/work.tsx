@@ -50,7 +50,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
   return (
     <div>
       <Page.Container className="grid grid-cols-1 md:grid-cols-[2fr_2fr_3fr_3fr] lg:grid-cols-4 gap-gutter">
-        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--spacing-nav-height)-var(--spacing-nav-height))] col-span-2 sticky top-[var(--spacing-nav-height)]">
+        <div className="hidden md:block relative w-full h-[calc(100dvh-var(--spacing-nav-height)-var(--spacing-nav-height)-1rem)] col-span-2 sticky top-[calc(var(--spacing-nav-height)_+_1rem)]">
           {filteredProjects.map((project) => (
             <div
               className={Utils.cx(
@@ -136,7 +136,7 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
               return (
                 <React.Fragment key={collection._id}>
                   <Link
-                    className="text-subdued hover:text-foreground transition-colors col-span-full grid grid-cols-subgrid not-first:mt-12"
+                    className="text-subdued hover:text-foreground transition-colors col-span-full grid grid-cols-subgrid py-0.5 not-first:mt-12"
                     href={Paths.Collections.detail(collection)}
                     onClick={() =>
                       Posthog.capture('work_collection_clicked', {
@@ -146,11 +146,11 @@ const WorkIndexView: React.FC<WorkDetailViewProps> = (props) => {
                     onMouseEnter={() => setActiveSelection({ type: 'collection', collection })}
                     onMouseLeave={() => setActiveSelection(null)}
                   >
-                    <Text.Body>{collection.title}</Text.Body>
+                    <Text.Body className="col-span-full">{collection.title}</Text.Body>
                   </Link>
                   {collectionProjects.map((project) => (
                     <Link
-                      className="text-subdued hover:text-foreground transition-colors duration-400 hover:duration-75 col-span-full grid grid-cols-subgrid"
+                      className="text-subdued hover:text-foreground transition-colors duration-400 hover:duration-75 col-span-full grid grid-cols-subgrid py-0.5"
                       href={`${Paths.Collections.detail(collection)}#${project.slug.current}`}
                       key={project._id}
                       onClick={() =>

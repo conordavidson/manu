@@ -4,12 +4,14 @@ import Image from '@/ui/image';
 import Posthog from 'posthog-js';
 import RichText from '@/ui/rich-text';
 
+import * as Carousel from '@/lib/carousel';
 import * as Page from '@/ui/page';
 import * as React from 'react';
 import * as RichTextUtils from '@/lib/rich-text';
 import * as Scroll from '@/lib/scroll';
 import * as Text from '@/ui/text';
 import * as Types from '@/lib/types';
+import * as Utils from '@/lib/utils';
 
 type CollectionsDetailViewProps = {
   collection: Types.Collection;
@@ -47,22 +49,36 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const slideRefs = React.useRef<(HTMLDivElement | null)[]>([]);
-  const isScrollingRef = React.useRef(false);
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
 
   const scrollToSlide = React.useCallback((index: number) => {
     const container = scrollRef.current;
     const el = slideRefs.current[index];
     if (!container || !el) return;
-    isScrollingRef.current = true;
-    setTimeout(() => {
-      isScrollingRef.current = false;
-    }, 400);
     Scroll.smoothScrollTo(container, el);
   }, []);
 
+  const onAutoAdvance = React.useCallback(
+    (index: number) => {
+      Posthog.capture('collection_slide_navigated', {
+        direction: 'auto',
+        slide_index: index,
+        collection_title: props.collection.title,
+      });
+    },
+    [props.collection.title],
+  );
+
+  const pauseAutoAdvance = Carousel.useCarouselBehavior({
+    containerRef: scrollRef,
+    currentSlideIndex,
+    onAutoAdvance,
+    scrollToSlide,
+    slideCount: totalSlides,
+  });
+
   const onNext = React.useCallback(() => {
-    if (isScrollingRef.current) return;
+    pauseAutoAdvance();
     const next = Math.min(currentSlideIndex + 1, totalSlides - 1);
     scrollToSlide(next);
     Posthog.capture('collection_slide_navigated', {
@@ -70,10 +86,10 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
       slide_index: next,
       collection_title: props.collection.title,
     });
-  }, [totalSlides, scrollToSlide, currentSlideIndex, props.collection.title]);
+  }, [totalSlides, scrollToSlide, currentSlideIndex, props.collection.title, pauseAutoAdvance]);
 
   const onPrevious = React.useCallback(() => {
-    if (isScrollingRef.current) return;
+    pauseAutoAdvance();
     const prev = Math.max(currentSlideIndex - 1, 0);
     scrollToSlide(prev);
     Posthog.capture('collection_slide_navigated', {
@@ -81,7 +97,7 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
       slide_index: prev,
       collection_title: props.collection.title,
     });
-  }, [scrollToSlide, currentSlideIndex, props.collection.title]);
+  }, [scrollToSlide, currentSlideIndex, props.collection.title, pauseAutoAdvance]);
 
   // Sync currentSlide on manual scroll via IntersectionObserver
   React.useEffect(() => {
@@ -110,7 +126,7 @@ const CollectionsDetailView: React.FC<CollectionsDetailViewProps> = (props) => {
   }, [projects]);
 
   return (
-    <div className="h-[calc(100dvh-var(--nav-height))] grid grid-rows-[auto_min-content]">
+    <div className="h-[calc(100dvh-var(--nav-height)-1rem)] grid grid-rows-[auto_min-content]">
       <div
         className="relative flex whitespace-nowrap overflow-x-scroll pb-4 snap-x snap-mandatory pt-8"
         ref={scrollRef}
@@ -149,11 +165,11 @@ const Project: React.FC<ProjectProps> = (props) => {
   return (
     <div className="relative h-full flex flex-col" id={props.project.slug.current}>
       <div className="flex flex-1 min-h-0 shrink-0">
-        {props.project.images.map((image, index) => {
+        {props.project.images.map((media, index) => {
           const slideIdx = props.startIndex + index;
           return (
             <Slide
-              key={image._key}
+              key={media._key}
               onNext={props.onNext}
               onPrevious={props.onPrevious}
               ref={(el) => {
@@ -161,12 +177,7 @@ const Project: React.FC<ProjectProps> = (props) => {
               }}
               title={`${index + 1} / ${props.project.images?.length}`}
             >
-              <Image
-                className="object-contain h-full w-full min-h-0"
-                image={image}
-                loading="eager"
-                sizes="100vw"
-              />
+              <ProjectMedia media={media} />
             </Slide>
           );
         })}
@@ -186,17 +197,19 @@ const Project: React.FC<ProjectProps> = (props) => {
             <div className="flex flex-col md:grid md:grid-cols-[300px_2fr] gap-x-12 gap-y-4 h-full">
               <div className="min-h-0 md:col-start-2 md:col-end-3 md:row-start-1">
                 <div className="grid grid-cols-6 gap-1">
-                  {props.project.images.map((image) => {
-                    return (
-                      <Image
-                        className="object-contain object-top-left h-full w-full"
-                        image={image}
-                        key={image._key}
-                        loading="eager"
-                        sizes="100vw"
-                      />
-                    );
-                  })}
+                  {props.project.images
+                    .flatMap((media) => (media._type === 'Slide' ? (media.images ?? []) : [media]))
+                    .map((image) => {
+                      return (
+                        <Image
+                          className="object-contain object-top-left h-full w-full"
+                          image={image}
+                          key={image._key}
+                          loading="eager"
+                          sizes="100vw"
+                        />
+                      );
+                    })}
                 </div>
               </div>
               <div className="min-h-0 whitespace-normal overflow-y-auto md:col-start-1 md:col-end-2 md:row-start-1">
@@ -234,8 +247,8 @@ const Slide = React.forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
         <div className="w-1/2 h-full cursor-e-resize pointer-events-auto" onClick={props.onNext} />
       </div>
       <Page.Container className="h-full flex flex-col">
-        {props.children}
-        <div className="pt-6">
+        <div className="flex flex-1 min-h-0 flex-col">{props.children}</div>
+        <div className="shrink-0 pt-6">
           <Text.Body className="text-subdued">{props.title}</Text.Body>
         </div>
       </Page.Container>
@@ -244,3 +257,43 @@ const Slide = React.forwardRef<HTMLDivElement, SlideProps>((props, ref) => {
 });
 
 export default CollectionsDetailView;
+
+type ProjectMediaProps = {
+  media: Types.ProjectMedia;
+};
+
+const ProjectMedia: React.FC<ProjectMediaProps> = (props) => {
+  if (props.media._type === 'image') {
+    return (
+      <Image
+        className="object-contain h-full max-h-[1000px] w-full min-h-0 my-auto"
+        image={props.media}
+        loading="eager"
+        sizes="100vw"
+      />
+    );
+  }
+
+  const images = props.media.images ?? [];
+
+  return (
+    <div
+      className={Utils.cx('grid h-full max-h-[1000px] min-h-0 my-auto', {
+        'grid-cols-2 gap-x-4': images.length === 2,
+      })}
+    >
+      {images.map((image, index) => (
+        <Image
+          className={Utils.cx('object-contain h-full w-full min-h-0', {
+            'object-right': images.length === 2 && index === 0,
+            'object-left': images.length === 2 && index === 1,
+          })}
+          image={image}
+          key={image._key}
+          loading="eager"
+          sizes="100vw"
+        />
+      ))}
+    </div>
+  );
+};

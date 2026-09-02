@@ -25,10 +25,20 @@ const INFO_QUERY = `
   }
 `;
 
-const PROJECT_QUERY = `
+const SLIDE_QUERY = `
   ...,
   images[] {
     ${IMAGE_QUERY}
+  }
+`;
+
+const PROJECT_QUERY = `
+  ...,
+  images[] {
+    ${IMAGE_QUERY},
+    images[] {
+      ${IMAGE_QUERY}
+    }
   },
   coverImage {
     ${IMAGE_QUERY}
@@ -44,13 +54,6 @@ const COLLECTION_QUERY = `
     ${PROJECT_QUERY}
   },
   coverImage {
-    ${IMAGE_QUERY}
-  }
-`;
-
-const SLIDE_QUERY = `
-  ...,
-  images[] {
     ${IMAGE_QUERY}
   }
 `;

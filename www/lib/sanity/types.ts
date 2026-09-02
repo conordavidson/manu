@@ -89,6 +89,18 @@ export type RichTextBase = Array<{
   _key: string;
 }>;
 
+export type Slide = {
+  _type: 'Slide';
+  images: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: 'image';
+    _key: string;
+  }>;
+};
+
 export type CollectionReference = {
   _ref: string;
   _type: 'reference';
@@ -104,18 +116,11 @@ export type Homepage = {
   _rev: string;
   features: Array<{
     collection: CollectionReference;
-    slides: Array<{
-      images: Array<{
-        asset?: SanityImageAssetReference;
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        _type: 'image';
+    slides: Array<
+      {
         _key: string;
-      }>;
-      _type: 'Slide';
-      _key: string;
-    }>;
+      } & Slide
+    >;
     _type: 'Feature';
     _key: string;
   }>;
@@ -171,14 +176,19 @@ export type Project = {
   year?: number;
   location?: string;
   client?: string;
-  images?: Array<{
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-    _key: string;
-  }>;
+  images?: Array<
+    | {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+        _key: string;
+      }
+    | ({
+        _key: string;
+      } & Slide)
+  >;
   projectType: 'personal' | 'commissioned';
   description?: RichTextSimple;
   coverImage?: {
@@ -340,6 +350,7 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | RichTextSimple
   | RichTextBase
+  | Slide
   | CollectionReference
   | Homepage
   | ProjectReference
@@ -359,7 +370,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: INDEX_PROJECTS_QUERY
-// Query: *[_type == "project"] | order(year desc) {   ...,  images[] {      ...,  asset -> {    ...  }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  } }
+// Query: *[_type == "project"] | order(year desc) {   ...,  images[] {      ...,  asset -> {    ...  },    images[] {        ...,  asset -> {    ...  }    }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  } }
 export type INDEX_PROJECTS_QUERY_RESULT = Array<{
   _id: string;
   _type: 'project';
@@ -371,35 +382,72 @@ export type INDEX_PROJECTS_QUERY_RESULT = Array<{
   year?: number;
   location?: string;
   client?: string;
-  images: Array<{
-    asset: {
-      _id: string;
-      _type: 'sanity.imageAsset';
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      originalFilename?: string;
-      label?: string;
-      title?: string;
-      description?: string;
-      altText?: string;
-      sha1hash: string;
-      extension: string;
-      mimeType: string;
-      size: number;
-      assetId: string;
-      uploadId?: string;
-      path: string;
-      url: string;
-      metadata?: SanityImageMetadata;
-      source?: SanityAssetSourceData;
-    } | null;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-    _key: string;
-  }> | null;
+  images: Array<
+    | {
+        asset: {
+          _id: string;
+          _type: 'sanity.imageAsset';
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          originalFilename?: string;
+          label?: string;
+          title?: string;
+          description?: string;
+          altText?: string;
+          sha1hash: string;
+          extension: string;
+          mimeType: string;
+          size: number;
+          assetId: string;
+          uploadId?: string;
+          path: string;
+          url: string;
+          metadata?: SanityImageMetadata;
+          source?: SanityAssetSourceData;
+        } | null;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+        _key: string;
+        images: null;
+      }
+    | {
+        _key: string;
+        _type: 'Slide';
+        images: Array<{
+          asset: {
+            _id: string;
+            _type: 'sanity.imageAsset';
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
+            uploadId?: string;
+            path: string;
+            url: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: 'image';
+          _key: string;
+        }>;
+        asset: null;
+      }
+  > | null;
   projectType: 'commissioned' | 'personal';
   description: Array<{
     children?: Array<{
@@ -455,7 +503,7 @@ export type INDEX_PROJECTS_QUERY_RESULT = Array<{
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: GET_PROJECT_BY_SLUG_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0] {   ...,  images[] {      ...,  asset -> {    ...  }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  } }
+// Query: *[_type == "project" && slug.current == $slug][0] {   ...,  images[] {      ...,  asset -> {    ...  },    images[] {        ...,  asset -> {    ...  }    }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  } }
 export type GET_PROJECT_BY_SLUG_QUERY_RESULT = {
   _id: string;
   _type: 'project';
@@ -467,35 +515,72 @@ export type GET_PROJECT_BY_SLUG_QUERY_RESULT = {
   year?: number;
   location?: string;
   client?: string;
-  images: Array<{
-    asset: {
-      _id: string;
-      _type: 'sanity.imageAsset';
-      _createdAt: string;
-      _updatedAt: string;
-      _rev: string;
-      originalFilename?: string;
-      label?: string;
-      title?: string;
-      description?: string;
-      altText?: string;
-      sha1hash: string;
-      extension: string;
-      mimeType: string;
-      size: number;
-      assetId: string;
-      uploadId?: string;
-      path: string;
-      url: string;
-      metadata?: SanityImageMetadata;
-      source?: SanityAssetSourceData;
-    } | null;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: 'image';
-    _key: string;
-  }> | null;
+  images: Array<
+    | {
+        asset: {
+          _id: string;
+          _type: 'sanity.imageAsset';
+          _createdAt: string;
+          _updatedAt: string;
+          _rev: string;
+          originalFilename?: string;
+          label?: string;
+          title?: string;
+          description?: string;
+          altText?: string;
+          sha1hash: string;
+          extension: string;
+          mimeType: string;
+          size: number;
+          assetId: string;
+          uploadId?: string;
+          path: string;
+          url: string;
+          metadata?: SanityImageMetadata;
+          source?: SanityAssetSourceData;
+        } | null;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: 'image';
+        _key: string;
+        images: null;
+      }
+    | {
+        _key: string;
+        _type: 'Slide';
+        images: Array<{
+          asset: {
+            _id: string;
+            _type: 'sanity.imageAsset';
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
+            uploadId?: string;
+            path: string;
+            url: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: 'image';
+          _key: string;
+        }>;
+        asset: null;
+      }
+  > | null;
   projectType: 'commissioned' | 'personal';
   description: Array<{
     children?: Array<{
@@ -628,7 +713,7 @@ export type GET_INFO_QUERY_RESULT = {
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: GET_COLLECTION_BY_SLUG_QUERY
-// Query: *[_type == "collection" && slug.current == $slug][0] {   ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  } }
+// Query: *[_type == "collection" && slug.current == $slug][0] {   ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  },    images[] {        ...,  asset -> {    ...  }    }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  } }
 export type GET_COLLECTION_BY_SLUG_QUERY_RESULT = {
   _id: string;
   _type: 'collection';
@@ -648,35 +733,72 @@ export type GET_COLLECTION_BY_SLUG_QUERY_RESULT = {
     year?: number;
     location?: string;
     client?: string;
-    images: Array<{
-      asset: {
-        _id: string;
-        _type: 'sanity.imageAsset';
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash: string;
-        extension: string;
-        mimeType: string;
-        size: number;
-        assetId: string;
-        uploadId?: string;
-        path: string;
-        url: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: 'image';
-      _key: string;
-    }> | null;
+    images: Array<
+      | {
+          asset: {
+            _id: string;
+            _type: 'sanity.imageAsset';
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
+            uploadId?: string;
+            path: string;
+            url: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: 'image';
+          _key: string;
+          images: null;
+        }
+      | {
+          _key: string;
+          _type: 'Slide';
+          images: Array<{
+            asset: {
+              _id: string;
+              _type: 'sanity.imageAsset';
+              _createdAt: string;
+              _updatedAt: string;
+              _rev: string;
+              originalFilename?: string;
+              label?: string;
+              title?: string;
+              description?: string;
+              altText?: string;
+              sha1hash: string;
+              extension: string;
+              mimeType: string;
+              size: number;
+              assetId: string;
+              uploadId?: string;
+              path: string;
+              url: string;
+              metadata?: SanityImageMetadata;
+              source?: SanityAssetSourceData;
+            } | null;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+            _key: string;
+          }>;
+          asset: null;
+        }
+    > | null;
     projectType: 'commissioned' | 'personal';
     description: Array<{
       children?: Array<{
@@ -765,7 +887,7 @@ export type GET_COLLECTION_BY_SLUG_QUERY_RESULT = {
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: INDEX_COLLECTIONS_QUERY
-// Query: *[_type == "collection"] | order(title asc) {   ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  } }
+// Query: *[_type == "collection"] | order(title asc) {   ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  },    images[] {        ...,  asset -> {    ...  }    }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  } }
 export type INDEX_COLLECTIONS_QUERY_RESULT = Array<{
   _id: string;
   _type: 'collection';
@@ -785,35 +907,72 @@ export type INDEX_COLLECTIONS_QUERY_RESULT = Array<{
     year?: number;
     location?: string;
     client?: string;
-    images: Array<{
-      asset: {
-        _id: string;
-        _type: 'sanity.imageAsset';
-        _createdAt: string;
-        _updatedAt: string;
-        _rev: string;
-        originalFilename?: string;
-        label?: string;
-        title?: string;
-        description?: string;
-        altText?: string;
-        sha1hash: string;
-        extension: string;
-        mimeType: string;
-        size: number;
-        assetId: string;
-        uploadId?: string;
-        path: string;
-        url: string;
-        metadata?: SanityImageMetadata;
-        source?: SanityAssetSourceData;
-      } | null;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: 'image';
-      _key: string;
-    }> | null;
+    images: Array<
+      | {
+          asset: {
+            _id: string;
+            _type: 'sanity.imageAsset';
+            _createdAt: string;
+            _updatedAt: string;
+            _rev: string;
+            originalFilename?: string;
+            label?: string;
+            title?: string;
+            description?: string;
+            altText?: string;
+            sha1hash: string;
+            extension: string;
+            mimeType: string;
+            size: number;
+            assetId: string;
+            uploadId?: string;
+            path: string;
+            url: string;
+            metadata?: SanityImageMetadata;
+            source?: SanityAssetSourceData;
+          } | null;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          _type: 'image';
+          _key: string;
+          images: null;
+        }
+      | {
+          _key: string;
+          _type: 'Slide';
+          images: Array<{
+            asset: {
+              _id: string;
+              _type: 'sanity.imageAsset';
+              _createdAt: string;
+              _updatedAt: string;
+              _rev: string;
+              originalFilename?: string;
+              label?: string;
+              title?: string;
+              description?: string;
+              altText?: string;
+              sha1hash: string;
+              extension: string;
+              mimeType: string;
+              size: number;
+              assetId: string;
+              uploadId?: string;
+              path: string;
+              url: string;
+              metadata?: SanityImageMetadata;
+              source?: SanityAssetSourceData;
+            } | null;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+            _key: string;
+          }>;
+          asset: null;
+        }
+    > | null;
     projectType: 'commissioned' | 'personal';
     description: Array<{
       children?: Array<{
@@ -902,7 +1061,7 @@ export type INDEX_COLLECTIONS_QUERY_RESULT = Array<{
 
 // Source: ../www/lib/sanity/queries.ts
 // Variable: GET_HOMEPAGE_QUERY
-// Query: *[_type == "homepage" && _id == "homepage"][0] {   ...,  features[] {      ...,  slides[] {      ...,  images[] {      ...,  asset -> {    ...  }  }  },  collection -> {      ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  }  }  } }
+// Query: *[_type == "homepage" && _id == "homepage"][0] {   ...,  features[] {      ...,  slides[] {      ...,  images[] {      ...,  asset -> {    ...  }  }  },  collection -> {      ...,  projects[] -> {      ...,  images[] {      ...,  asset -> {    ...  },    images[] {        ...,  asset -> {    ...  }    }  },  coverImage {      ...,  asset -> {    ...  }  },  description[] {      ...,  markDefs[] {    ...,  }  }  },  coverImage {      ...,  asset -> {    ...  }  }  }  } }
 export type GET_HOMEPAGE_QUERY_RESULT = {
   _id: 'homepage';
   _type: 'homepage';
@@ -929,35 +1088,72 @@ export type GET_HOMEPAGE_QUERY_RESULT = {
         year?: number;
         location?: string;
         client?: string;
-        images: Array<{
-          asset: {
-            _id: string;
-            _type: 'sanity.imageAsset';
-            _createdAt: string;
-            _updatedAt: string;
-            _rev: string;
-            originalFilename?: string;
-            label?: string;
-            title?: string;
-            description?: string;
-            altText?: string;
-            sha1hash: string;
-            extension: string;
-            mimeType: string;
-            size: number;
-            assetId: string;
-            uploadId?: string;
-            path: string;
-            url: string;
-            metadata?: SanityImageMetadata;
-            source?: SanityAssetSourceData;
-          } | null;
-          media?: unknown;
-          hotspot?: SanityImageHotspot;
-          crop?: SanityImageCrop;
-          _type: 'image';
-          _key: string;
-        }> | null;
+        images: Array<
+          | {
+              asset: {
+                _id: string;
+                _type: 'sanity.imageAsset';
+                _createdAt: string;
+                _updatedAt: string;
+                _rev: string;
+                originalFilename?: string;
+                label?: string;
+                title?: string;
+                description?: string;
+                altText?: string;
+                sha1hash: string;
+                extension: string;
+                mimeType: string;
+                size: number;
+                assetId: string;
+                uploadId?: string;
+                path: string;
+                url: string;
+                metadata?: SanityImageMetadata;
+                source?: SanityAssetSourceData;
+              } | null;
+              media?: unknown;
+              hotspot?: SanityImageHotspot;
+              crop?: SanityImageCrop;
+              _type: 'image';
+              _key: string;
+              images: null;
+            }
+          | {
+              _key: string;
+              _type: 'Slide';
+              images: Array<{
+                asset: {
+                  _id: string;
+                  _type: 'sanity.imageAsset';
+                  _createdAt: string;
+                  _updatedAt: string;
+                  _rev: string;
+                  originalFilename?: string;
+                  label?: string;
+                  title?: string;
+                  description?: string;
+                  altText?: string;
+                  sha1hash: string;
+                  extension: string;
+                  mimeType: string;
+                  size: number;
+                  assetId: string;
+                  uploadId?: string;
+                  path: string;
+                  url: string;
+                  metadata?: SanityImageMetadata;
+                  source?: SanityAssetSourceData;
+                } | null;
+                media?: unknown;
+                hotspot?: SanityImageHotspot;
+                crop?: SanityImageCrop;
+                _type: 'image';
+                _key: string;
+              }>;
+              asset: null;
+            }
+        > | null;
         projectType: 'commissioned' | 'personal';
         description: Array<{
           children?: Array<{
@@ -1044,6 +1240,8 @@ export type GET_HOMEPAGE_QUERY_RESULT = {
       };
     };
     slides: Array<{
+      _key: string;
+      _type: 'Slide';
       images: Array<{
         asset: {
           _id: string;
@@ -1073,8 +1271,6 @@ export type GET_HOMEPAGE_QUERY_RESULT = {
         _type: 'image';
         _key: string;
       }>;
-      _type: 'Slide';
-      _key: string;
     }>;
     _type: 'Feature';
     _key: string;
@@ -1085,12 +1281,12 @@ export type GET_HOMEPAGE_QUERY_RESULT = {
 import '@sanity/client';
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "project"] | order(year desc) { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': INDEX_PROJECTS_QUERY_RESULT;
-    '*[_type == "project" && slug.current == $slug][0] { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': GET_PROJECT_BY_SLUG_QUERY_RESULT;
+    '*[_type == "project"] | order(year desc) { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n,\n    images[] {\n      \n  ...,\n  asset -> {\n    ...\n  }\n\n    }\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': INDEX_PROJECTS_QUERY_RESULT;
+    '*[_type == "project" && slug.current == $slug][0] { \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n,\n    images[] {\n      \n  ...,\n  asset -> {\n    ...\n  }\n\n    }\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n }': GET_PROJECT_BY_SLUG_QUERY_RESULT;
     '*[_type == "settings" && _id == "settings"][0] { \n  ...\n }': GET_SETTINGS_QUERY_RESULT;
     '*[_type == "info" && _id == "info"][0] { \n  ...,\n  bioImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_INFO_QUERY_RESULT;
-    '*[_type == "collection" && slug.current == $slug][0] { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_COLLECTION_BY_SLUG_QUERY_RESULT;
-    '*[_type == "collection"] | order(title asc) { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': INDEX_COLLECTIONS_QUERY_RESULT;
-    '*[_type == "homepage" && _id == "homepage"][0] { \n  ...,\n  features[] {\n    \n  ...,\n  slides[] {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  },\n  collection -> {\n    \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  }\n\n  }\n }': GET_HOMEPAGE_QUERY_RESULT;
+    '*[_type == "collection" && slug.current == $slug][0] { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n,\n    images[] {\n      \n  ...,\n  asset -> {\n    ...\n  }\n\n    }\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': GET_COLLECTION_BY_SLUG_QUERY_RESULT;
+    '*[_type == "collection"] | order(title asc) { \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n,\n    images[] {\n      \n  ...,\n  asset -> {\n    ...\n  }\n\n    }\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n }': INDEX_COLLECTIONS_QUERY_RESULT;
+    '*[_type == "homepage" && _id == "homepage"][0] { \n  ...,\n  features[] {\n    \n  ...,\n  slides[] {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  },\n  collection -> {\n    \n  ...,\n  projects[] -> {\n    \n  ...,\n  images[] {\n    \n  ...,\n  asset -> {\n    ...\n  }\n,\n    images[] {\n      \n  ...,\n  asset -> {\n    ...\n  }\n\n    }\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  },\n  description[] {\n    \n  ...,\n  markDefs[] {\n    ...,\n  }\n\n  }\n\n  },\n  coverImage {\n    \n  ...,\n  asset -> {\n    ...\n  }\n\n  }\n\n  }\n\n  }\n }': GET_HOMEPAGE_QUERY_RESULT;
   }
 }

@@ -39,9 +39,9 @@ const Project = Sanity.defineType({
     },
     {
       name: 'images',
-      title: 'Images',
+      title: 'Images / Slides',
       type: 'array',
-      of: [{ type: 'image' }],
+      of: [{ type: 'image' }, { type: 'Slide' }],
     },
     {
       name: 'projectType',
