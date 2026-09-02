@@ -30,6 +30,7 @@ export function useCarouselBehavior(options: UseCarouselBehaviorOptions): () => 
   const wheelGestureRef = React.useRef<null | WheelGesture>(null);
   const wheelUnlockTimeoutRef = React.useRef<null | ReturnType<typeof setTimeout>>(null);
   const [isAutoAdvancePaused, setIsAutoAdvancePaused] = React.useState(false);
+  const [isPageVisible, setIsPageVisible] = React.useState(true);
 
   const pauseAutoAdvance = React.useCallback(() => {
     if (isAutoScrollActiveRef.current && containerRef.current) {
@@ -63,7 +64,34 @@ export function useCarouselBehavior(options: UseCarouselBehaviorOptions): () => 
   }, []);
 
   React.useEffect(() => {
-    if (isAutoAdvancePaused || slideCount <= 1) return;
+    const onVisibilityChange = () => {
+      const isVisible = document.visibilityState === 'visible';
+
+      if (!isVisible) {
+        if (autoAdvanceTimeoutRef.current) {
+          clearTimeout(autoAdvanceTimeoutRef.current);
+          autoAdvanceTimeoutRef.current = null;
+        }
+        if (isAutoScrollActiveRef.current && containerRef.current) {
+          Scroll.cancelSmoothScroll(containerRef.current);
+        }
+        isAutoScrollActiveRef.current = false;
+        if (autoScrollResetTimeoutRef.current) {
+          clearTimeout(autoScrollResetTimeoutRef.current);
+          autoScrollResetTimeoutRef.current = null;
+        }
+      }
+
+      setIsPageVisible(isVisible);
+    };
+
+    onVisibilityChange();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange);
+  }, [containerRef]);
+
+  React.useEffect(() => {
+    if (isAutoAdvancePaused || !isPageVisible || slideCount <= 1) return;
 
     const timeout = setTimeout(() => {
       autoAdvanceTimeoutRef.current = null;
@@ -82,7 +110,14 @@ export function useCarouselBehavior(options: UseCarouselBehaviorOptions): () => 
       clearTimeout(timeout);
       if (autoAdvanceTimeoutRef.current === timeout) autoAdvanceTimeoutRef.current = null;
     };
-  }, [currentSlideIndex, isAutoAdvancePaused, onAutoAdvance, scrollToSlide, slideCount]);
+  }, [
+    currentSlideIndex,
+    isAutoAdvancePaused,
+    isPageVisible,
+    onAutoAdvance,
+    scrollToSlide,
+    slideCount,
+  ]);
 
   React.useEffect(() => {
     const container = containerRef.current;
