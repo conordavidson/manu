@@ -142,7 +142,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
 
             if (slide.images.length === 2) {
               return (
-                <div className="grid grid-cols-2 gap-x-4 h-full max-h-[1000px] my-auto">
+                <div className="grid grid-cols-2 gap-x-4 h-full md:max-h-[1000px] my-auto">
                   {slide.images.map((image, index) => (
                     <Image
                       className={Utils.cx('object-contain h-full w-full min-h-0', {
@@ -161,7 +161,7 @@ const Feature: React.FC<FeatureProps> = (props) => {
 
             return (
               <Image
-                className="object-contain h-full max-h-[1000px] w-full my-auto"
+                className="object-contain h-full md:max-h-[1000px] w-full my-auto"
                 image={slide.images[0]}
                 loading="eager"
                 sizes="100vw"

@@ -266,7 +266,7 @@ const ProjectMedia: React.FC<ProjectMediaProps> = (props) => {
   if (props.media._type === 'image') {
     return (
       <Image
-        className="object-contain h-full max-h-[1000px] w-full min-h-0 my-auto"
+        className="object-contain h-full md:max-h-[1000px] w-full min-h-0 my-auto"
         image={props.media}
         loading="eager"
         sizes="100vw"
@@ -278,7 +278,7 @@ const ProjectMedia: React.FC<ProjectMediaProps> = (props) => {
 
   return (
     <div
-      className={Utils.cx('grid h-full max-h-[1000px] min-h-0 my-auto', {
+      className={Utils.cx('grid h-full md:max-h-[1000px] min-h-0 my-auto', {
         'grid-cols-2 gap-x-4': images.length === 2,
       })}
     >
